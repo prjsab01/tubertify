@@ -1,13 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
-import { extractYouTubeVideoId, extractYouTubePlaylistId } from '../../lib/utils'
-
-interface VideoInfo {
-  videoId: string
-  title: string
-  description: string
-  thumbnail: string
-  duration: number
+// Utility functions for YouTube URL parsing
+function extractYouTubeVideoId(url) {
+  const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+  const match = url.match(regex)
+  return match ? match[1] : null
 }
+
+function extractYouTubePlaylistId(url) {
+  const regex = /[?&]list=([^#\&\?]*)/
+  const match = url.match(regex)
+  return match ? match[1] : null
+}
+
+/**
+ * @typedef {Object} VideoInfo
+ * @property {string} videoId
+ * @property {string} title
+ * @property {string} description
+ * @property {string} thumbnail
+ * @property {number} duration
+ */
 
 export async function onRequestPost(context) {
   const { request, env } = context
@@ -57,7 +68,7 @@ export async function onRequestPost(context) {
     }
 
     let courseData
-    let modules: VideoInfo[] = []
+    let modules = []
 
     if (playlistId) {
       // Handle playlist
@@ -129,12 +140,7 @@ export async function onRequestPost(context) {
   }
 }
 
-async function fetchPlaylistInfo(playlistId: string, apiKey: string): Promise<{
-  title: string
-  description: string
-  thumbnail: string
-  videos: VideoInfo[]
-}> {
+async function fetchPlaylistInfo(playlistId, apiKey) {
   // Fetch playlist details
   const playlistResponse = await fetch(
     `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`
@@ -179,7 +185,7 @@ async function fetchPlaylistInfo(playlistId: string, apiKey: string): Promise<{
   }
 }
 
-async function fetchVideoInfo(videoId: string, apiKey: string): Promise<VideoInfo> {
+async function fetchVideoInfo(videoId, apiKey) {
   const response = await fetch(
     `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${apiKey}`
   )
@@ -210,7 +216,7 @@ async function fetchVideoInfo(videoId: string, apiKey: string): Promise<VideoInf
   }
 }
 
-function parseDuration(duration: string): number {
+function parseDuration(duration) {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
   if (!match) return 0
 
@@ -221,7 +227,7 @@ function parseDuration(duration: string): number {
   return hours * 3600 + minutes * 60 + seconds
 }
 
-function extractTags(text: string): string[] {
+function extractTags(text) {
   const commonTags = [
     'programming', 'tutorial', 'education', 'technology', 'web development',
     'javascript', 'python', 'react', 'nodejs', 'css', 'html', 'database',
