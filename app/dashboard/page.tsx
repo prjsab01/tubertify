@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/components/providers'
-import { createSupabaseClient } from '@/lib/supabase'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { useAuth } from '../../components/providers'
+import { createSupabaseClient } from '../../lib/supabase'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
+import { Button } from '../../components/ui/button'
 import { motion } from 'framer-motion'
 import { 
   BookOpen, 

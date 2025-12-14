@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useAuth } from '@/components/providers'
-import { CourseCreator } from '@/components/course-creator'
+import { useAuth } from '../../../components/providers'
+import { CourseCreator } from '../../../components/course-creator'
 import { useRouter } from 'next/navigation'
 
 export default function CreateCoursePage() {
