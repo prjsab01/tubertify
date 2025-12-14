@@ -23,6 +23,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getSession = async () => {
+      if (!supabase) {
+        setLoading(false)
+        return
+      }
+
       const { data: { session } } = await supabase.auth.getSession()
       setUser(session?.user ?? null)
       
@@ -33,6 +38,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     }
 
     getSession()
+
+    if (!supabase) return
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -52,6 +59,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   const loadProfile = async (user: User) => {
     try {
+      if (!supabase) return
+
       const { data: existingProfile } = await supabase
         .from('profiles')
         .select('*')
@@ -113,6 +122,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }
 
   const signInWithGoogle = async () => {
+    if (!supabase) return
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -122,6 +132,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
+    if (!supabase) return
     await supabase.auth.signOut()
   }
 

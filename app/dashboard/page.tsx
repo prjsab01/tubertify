@@ -90,6 +90,8 @@ export default function DashboardPage() {
 
   const loadDashboardData = async () => {
     try {
+      if (!supabase) return
+
       // Load user stats
       const { data: progressData } = await supabase
         .from('course_progress')
