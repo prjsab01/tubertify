@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     try {
       const parsed = JSON.parse(mcqResponse)
       questions = parsed.questions || parsed
-    } catch (e) {
+    } catch {
       // Fallback parsing if JSON is malformed
       questions = generateFallbackQuestions()
     }

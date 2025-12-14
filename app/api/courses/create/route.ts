@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
 async function fetchPlaylistInfo(playlistId: string) {
   // Mock implementation - in production, use YouTube Data API
   return {
-    title: 'Sample Playlist Course',
+    title: `Playlist Course: ${playlistId}`,
     description: 'A comprehensive course created from YouTube playlist',
     thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
     videos: [

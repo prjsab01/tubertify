@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '../../components/providers'
 import { createSupabaseClient } from '../../lib/supabase'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
@@ -12,7 +12,6 @@ import {
   Target, 
   Clock, 
   Star, 
-  TrendingUp,
   Play,
   Award,
   Calendar,
@@ -82,13 +81,7 @@ export default function DashboardPage() {
     }
   }, [user, loading, router])
 
-  useEffect(() => {
-    if (user && profile) {
-      loadDashboardData()
-    }
-  }, [user, profile])
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       if (!supabase) return
 
@@ -107,8 +100,8 @@ export default function DashboardPage() {
       const inProgress = progressData?.filter(p => p.status === 'in_progress').length || 0
 
       setStats({
-        totalPoints: profile.total_points || 0,
-        currentStreak: profile.current_streak || 0,
+        totalPoints: profile?.total_points || 0,
+        currentStreak: profile?.current_streak || 0,
         coursesCompleted: completed,
         coursesInProgress: inProgress,
         certificatesEarned: certificatesData?.length || 0,
@@ -144,7 +137,13 @@ export default function DashboardPage() {
     } catch (error) {
       console.error('Error loading dashboard data:', error)
     }
-  }
+  }, [user, profile, supabase])
+
+  useEffect(() => {
+    if (user && profile) {
+      loadDashboardData()
+    }
+  }, [user, profile, loadDashboardData])
 
   if (loading) {
     return (
@@ -256,13 +255,13 @@ export default function DashboardPage() {
               <CardContent>
                 {recentCourses.length > 0 ? (
                   <div className="space-y-4">
-                    {recentCourses.map((progress: any) => (
+                    {recentCourses.map((progress: RecentCourse) => (
                       <div key={progress.id} className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-accent/50 cursor-pointer">
                         <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
                           <BookOpen className="h-6 w-6" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold">{progress.courses.title}</h3>
+                          <h3 className="font-semibold">{progress.courses?.title || 'Unknown Course'}</h3>
                           <p className="text-sm text-muted-foreground">
                             Progress: {Math.round(progress.progress_percentage)}%
                           </p>
@@ -359,7 +358,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {featuredCourses.map((course: any) => (
+              {featuredCourses.map((course: FeaturedCourse) => (
                 <div key={course.id} className="border rounded-lg p-4 hover:bg-accent/50 cursor-pointer">
                   <div className="w-full h-32 bg-muted rounded-lg mb-3 flex items-center justify-center">
                     <Play className="h-8 w-8" />

@@ -1,13 +1,31 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
 import { createSupabaseClient } from '../lib/supabase'
 import { hashEmail } from '../lib/utils'
 
+interface UserProfile {
+  id: string
+  email: string
+  full_name: string | null
+  display_name: string | null
+  avatar_url: string | null
+  role: 'learner' | 'admin'
+  learning_goals: string[] | null
+  preferred_topics: string[] | null
+  time_commitment: string | null
+  total_points: number
+  current_streak: number
+  longest_streak: number
+  last_login_date: string | null
+  created_at: string
+  updated_at: string
+}
+
 interface AuthContextType {
   user: User | null
-  profile: any | null
+  profile: UserProfile | null
   loading: boolean
   signOut: () => Promise<void>
   signInWithGoogle: () => Promise<void>
@@ -17,47 +35,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [profile, setProfile] = useState<any | null>(null)
+  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createSupabaseClient()
 
-  useEffect(() => {
-    const getSession = async () => {
-      if (!supabase) {
-        setLoading(false)
-        return
-      }
-
-      const { data: { session } } = await supabase.auth.getSession()
-      setUser(session?.user ?? null)
-      
-      if (session?.user) {
-        await loadProfile(session.user)
-      }
-      setLoading(false)
-    }
-
-    getSession()
-
-    if (!supabase) return
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null)
-        
-        if (session?.user) {
-          await loadProfile(session.user)
-        } else {
-          setProfile(null)
-        }
-        setLoading(false)
-      }
-    )
-
-    return () => subscription.unsubscribe()
-  }, [])
-
-  const loadProfile = async (user: User) => {
+  const loadProfile = useCallback(async (user: User) => {
     try {
       if (!supabase) return
 
@@ -119,7 +101,43 @@ export function Providers({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Error loading profile:', error)
     }
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    const getSession = async () => {
+      if (!supabase) {
+        setLoading(false)
+        return
+      }
+
+      const { data: { session } } = await supabase.auth.getSession()
+      setUser(session?.user ?? null)
+      
+      if (session?.user) {
+        await loadProfile(session.user)
+      }
+      setLoading(false)
+    }
+
+    getSession()
+
+    if (!supabase) return
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setUser(session?.user ?? null)
+        
+        if (session?.user) {
+          await loadProfile(session.user)
+        } else {
+          setProfile(null)
+        }
+        setLoading(false)
+      }
+    )
+
+    return () => subscription.unsubscribe()
+  }, [supabase, loadProfile])
 
   const signInWithGoogle = async () => {
     if (!supabase) return
