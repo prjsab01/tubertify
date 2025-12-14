@@ -1,17 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
-import { createBrowserClient } from '@supabase/ssr'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-// Only create on client side
-export const supabase = typeof window !== 'undefined' 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null
-
 export const createSupabaseClient = () => {
   if (typeof window === 'undefined') return null
-  return createBrowserClient(supabaseUrl, supabaseAnonKey)
+  return createClient(supabaseUrl, supabaseAnonKey)
 }
 
 export type Database = {
