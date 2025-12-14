@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useAuth } from '@/components/providers'
-import { isValidYouTubeUrl } from '@/lib/utils'
+import { Button } from './ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { useAuth } from './providers'
+import { isValidYouTubeUrl } from '../lib/utils'
 import { motion } from 'framer-motion'
 import { Youtube, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
