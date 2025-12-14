@@ -20,6 +20,8 @@ function extractYouTubePlaylistId(url) {
  * @property {number} duration
  */
 
+import { createClient } from '@supabase/supabase-js'
+
 export async function onRequestPost(context) {
   const { request, env } = context
 

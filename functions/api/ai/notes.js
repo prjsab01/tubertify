@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { createClient } from '@supabase/supabase-js'
 
 export async function onRequestPost(context) {
   const { request, env } = context
@@ -7,8 +8,11 @@ export async function onRequestPost(context) {
   const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY_2)
   const studyModel = genAI.getGenerativeModel({ model: 'gemini-pro' })
 
-  // Create Supabase client (simplified for edge function)
-  const supabase = createSupabaseClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
+  // Create Supabase client
+  const supabase = createClient(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.SUPABASE_SERVICE_ROLE_KEY
+  )
 
   try {
     const { courseId, userId, courseContent } = await request.json()
@@ -88,31 +92,6 @@ Create detailed, well-structured study notes that will help students learn and r
     return new Response(JSON.stringify({ error: 'Failed to generate study notes' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
-    })
-  }
-}
-
-// Simplified Supabase client for edge functions
-function createSupabaseClient(supabaseUrl, serviceRoleKey) {
-  return {
-    from: (table) => ({
-      select: (columns) => ({
-        eq: (column, value) => ({
-          single: async () => {
-            // This is a simplified implementation
-            // In production, you'd use the actual Supabase client
-            return { data: null, error: null }
-          }
-        })
-      }),
-      insert: (data) => ({
-        // Simplified insert implementation
-        then: (callback) => callback({ error: null })
-      }),
-      upsert: (data) => ({
-        // Simplified upsert implementation
-        then: (callback) => callback({ error: null })
-      })
     })
   }
 }
