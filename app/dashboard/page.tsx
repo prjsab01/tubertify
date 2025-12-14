@@ -29,6 +29,38 @@ interface DashboardStats {
   totalWatchTime: number
 }
 
+interface RecentCourse {
+  id: string
+  status: string
+  progress_percentage: number
+  updated_at: string
+  courses: {
+    id: string
+    title: string
+    thumbnail_url: string | null
+    tags: string[] | null
+  } | null
+}
+
+interface FeaturedCourse {
+  id: string
+  title: string
+  description: string | null
+  youtube_url: string | null
+  youtube_playlist_id: string | null
+  thumbnail_url: string | null
+  duration_minutes: number | null
+  tags: string[] | null
+  difficulty_level: 'beginner' | 'intermediate' | 'advanced'
+  created_by: string | null
+  is_featured: boolean
+  is_admin_created: boolean
+  unlock_points: number
+  total_modules: number
+  created_at: string
+  updated_at: string
+}
+
 export default function DashboardPage() {
   const { user, profile, loading } = useAuth()
   const router = useRouter()
@@ -40,8 +72,8 @@ export default function DashboardPage() {
     certificatesEarned: 0,
     totalWatchTime: 0
   })
-  const [recentCourses, setRecentCourses] = useState([])
-  const [featuredCourses, setFeaturedCourses] = useState([])
+  const [recentCourses, setRecentCourses] = useState<RecentCourse[]>([])
+  const [featuredCourses, setFeaturedCourses] = useState<FeaturedCourse[]>([])
   const supabase = createSupabaseClient()
 
   useEffect(() => {
