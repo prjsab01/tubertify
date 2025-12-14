@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { extractYouTubeVideoId, extractYouTubePlaylistId } from '@/lib/utils'
 
+interface VideoInfo {
+  videoId: string
+  title: string
+  description: string
+  thumbnail: string
+  duration: number
+}
+
 export async function POST(request: NextRequest) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -39,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     let courseData
-    let modules = []
+    let modules: VideoInfo[] = []
 
     if (playlistId) {
       // Handle playlist
@@ -105,32 +113,111 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function fetchPlaylistInfo(playlistId: string) {
-  // Mock implementation - in production, use YouTube Data API
+async function fetchPlaylistInfo(playlistId: string): Promise<{
+  title: string
+  description: string
+  thumbnail: string
+  videos: VideoInfo[]
+}> {
+  const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
+
+  if (!YOUTUBE_API_KEY) {
+    throw new Error('YouTube API key not configured')
+  }
+
+  // Fetch playlist details
+  const playlistResponse = await fetch(
+    `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${YOUTUBE_API_KEY}`
+  )
+
+  if (!playlistResponse.ok) {
+    throw new Error('Failed to fetch playlist information')
+  }
+
+  const playlistData = await playlistResponse.json()
+
+  if (!playlistData.items || playlistData.items.length === 0) {
+    throw new Error('Playlist not found')
+  }
+
+  const playlist = playlistData.items[0].snippet
+
+  // Fetch playlist items (videos)
+  const itemsResponse = await fetch(
+    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=${playlistId}&maxResults=50&key=${YOUTUBE_API_KEY}`
+  )
+
+  if (!itemsResponse.ok) {
+    throw new Error('Failed to fetch playlist videos')
+  }
+
+  const itemsData = await itemsResponse.json()
+
+  const videos: VideoInfo[] = itemsData.items.map((item: {
+    contentDetails: { videoId: string }
+    snippet: { title: string; description: string; thumbnails?: { maxres?: { url: string }; high?: { url: string } } }
+  }) => ({
+    videoId: item.contentDetails.videoId,
+    title: item.snippet.title,
+    description: item.snippet.description,
+    thumbnail: item.snippet.thumbnails?.maxres?.url || item.snippet.thumbnails?.high?.url || '',
+    duration: 0 // Will be fetched separately if needed
+  }))
+
   return {
-    title: `Playlist Course: ${playlistId}`,
-    description: 'A comprehensive course created from YouTube playlist',
-    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-    videos: [
-      {
-        videoId: 'dQw4w9WgXcQ',
-        title: 'Introduction to the Topic',
-        description: 'Learn the basics',
-        duration: 300
-      }
-    ]
+    title: playlist.title,
+    description: playlist.description,
+    thumbnail: playlist.thumbnails?.maxres?.url || playlist.thumbnails?.high?.url,
+    videos
   }
 }
 
-async function fetchVideoInfo(videoId: string) {
-  // Mock implementation - in production, use YouTube Data API
+async function fetchVideoInfo(videoId: string): Promise<VideoInfo> {
+  const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
+
+  if (!YOUTUBE_API_KEY) {
+    throw new Error('YouTube API key not configured')
+  }
+
+  const response = await fetch(
+    `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${YOUTUBE_API_KEY}`
+  )
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch video information')
+  }
+
+  const data = await response.json()
+
+  if (!data.items || data.items.length === 0) {
+    throw new Error('Video not found')
+  }
+
+  const video = data.items[0]
+  const snippet = video.snippet
+  const contentDetails = video.contentDetails
+
+  // Parse duration (ISO 8601 format)
+  const duration = parseDuration(contentDetails.duration)
+
   return {
     videoId,
-    title: 'Sample Video Course',
-    description: 'A course created from a single YouTube video',
-    thumbnail: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
-    duration: 600
+    title: snippet.title,
+    description: snippet.description,
+    thumbnail: snippet.thumbnails?.maxres?.url || snippet.thumbnails?.high?.url,
+    duration
   }
+}
+
+function parseDuration(duration: string): number {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
+  if (!match) return 0
+
+  const hours = parseInt(match[1] || '0')
+  const minutes = parseInt(match[2] || '0')
+  const seconds = parseInt(match[3] || '0')
+
+  return hours * 3600 + minutes * 60 + seconds
 }
 
 function extractTags(text: string): string[] {
