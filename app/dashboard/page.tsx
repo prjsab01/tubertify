@@ -143,10 +143,10 @@ export default function DashboardPage() {
   }, [user, profile, supabase])
 
   useEffect(() => {
-    if (user && profile) {
+    if (user) {
       loadDashboardData()
     }
-  }, [user, profile, loadDashboardData])
+  }, [user, loadDashboardData])
 
   if (loading) {
     return (
@@ -160,7 +160,7 @@ export default function DashboardPage() {
     )
   }
 
-  if (!user || !profile) return null
+  if (!user) return null
 
   const statCards = [
     {
@@ -208,7 +208,7 @@ export default function DashboardPage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Welcome back, {profile.display_name || profile.full_name}!</h1>
+              <h1 className="text-3xl font-bold">Welcome back, {profile?.display_name || profile?.full_name || 'Learner'}!</h1>
               <p className="text-muted-foreground mt-1">Continue your learning journey</p>
             </div>
             <Button onClick={() => router.push('/course/create')}>
