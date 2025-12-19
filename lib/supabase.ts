@@ -5,7 +5,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 export const createSupabaseClient = () => {
   if (typeof window === 'undefined') return null
-  if (!supabaseUrl || !supabaseAnonKey) return null
+  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.startsWith('your_') || supabaseAnonKey.startsWith('your_')) return null
   return createClient(supabaseUrl, supabaseAnonKey)
 }
 
