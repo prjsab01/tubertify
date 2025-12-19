@@ -119,24 +119,19 @@ tubertify/
 
 ### 1. Connect Repository
 
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
-2. Navigate to Pages
-3. Click "Create a project"
-4. Choose "Connect to Git"
-5. Select your GitHub repository
-6. Click "Begin setup"
+Your repository is already connected. Ensure it's set to the main branch.
 
 ### 2. Build Configuration
 
-Set the following build settings:
+Update the build settings in Cloudflare Pages to:
 - **Framework preset**: Next.js
-- **Build command**: `npm run build`
-- **Build output directory**: `.next`
+- **Build command**: `npx @cloudflare/next-on-pages@1`
+- **Build output directory**: `.vercel/output/static`
 - **Root directory**: `/` (leave empty)
 
 ### 3. Environment Variables
 
-Add these environment variables in Cloudflare Pages settings:
+Your environment variables are already added. Ensure they match:
 
 ```env
 # Supabase Configuration
@@ -158,9 +153,7 @@ NODE_ENV=production
 
 ### 4. Deploy
 
-1. Click "Save and Deploy"
-2. Wait for build to complete (3-5 minutes)
-3. Your app will be available at `https://your-project.pages.dev`
+Commit and push these changes to your main branch. Cloudflare Pages will automatically rebuild and deploy.
 
 ## 🌐 Custom Domain (Optional)
 

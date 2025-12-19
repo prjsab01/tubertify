@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx @cloudflare/next-on-pages@1",
     "start": "next start",
     "lint": "next lint"
   },
@@ -24,7 +24,7 @@
     "crypto-js": "^4.2.0",
     "framer-motion": "^10.16.4",
     "lucide-react": "^0.292.0",
-    "next": "^15.5.2",
+    "next": "15.5.2",
     "postcss": "^8.4.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -34,8 +34,8 @@
     "typescript": "^5.2.2"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "eslint": "^8.51.0",
-    "eslint-config-next": "^14.0.0"
+    "eslint-config-next": "15.5.2",
+    "@cloudflare/next-on-pages": "^1.13.16"
   }
 }
