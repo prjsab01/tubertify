@@ -2,6 +2,8 @@ import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { Providers } from '../components/providers'
+import { Navigation } from '../components/navigation'
+import { PageTransition } from '../components/page-transition'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,7 +29,10 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={inter.className}>
         <Providers>
-          {children}
+          <Navigation />
+          <PageTransition>
+            {children}
+          </PageTransition>
         </Providers>
       </body>
     </html>

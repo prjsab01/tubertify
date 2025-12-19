@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { useAuth } from './providers'
 import { isValidYouTubeUrl } from '../lib/utils'
 import { motion } from 'framer-motion'
-import { Youtube, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import { LoadingSpinner } from './loading'
 
 export function CourseCreator() {
   const { user } = useAuth()
