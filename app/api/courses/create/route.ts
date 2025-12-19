@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { extractYouTubeVideoId, extractYouTubePlaylistId } from '@/lib/utils'
 
+export const runtime = 'edge'
+
 interface VideoInfo {
   videoId: string
   title: string
