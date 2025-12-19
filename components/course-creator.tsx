@@ -7,6 +7,7 @@ import { useAuth } from './providers'
 import { isValidYouTubeUrl } from '../lib/utils'
 import { motion } from 'framer-motion'
 import { LoadingSpinner } from './loading'
+import { Youtube, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
 
 export function CourseCreator() {
   const { user } = useAuth()

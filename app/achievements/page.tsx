@@ -78,10 +78,10 @@ export default function AchievementsPage() {
       if (error) throw error
 
       // Transform data
-      const achievementsData: Achievement[] = userAchievements?.map(ua => ({
+      const achievementsData = (userAchievements?.map(ua => ({
         ...ua.achievements,
         unlocked_at: ua.unlocked_at
-      })) || []
+      })) || []) as unknown as Achievement[]
 
       setAchievements(achievementsData)
     } catch (error) {
