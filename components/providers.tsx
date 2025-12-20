@@ -38,6 +38,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createSupabaseClient()
+  const adminEmailHash = process.env.ADMIN_EMAIL_HASH
 
   const loadProfile = useCallback(async (user: User) => {
     try {
@@ -50,15 +51,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
         .single()
 
       if (existingProfile) {
-        // Check if user should be admin
-        const { data: adminConfig } = await supabase
-          .from('app_config')
-          .select('value')
-          .eq('key', 'admin_email_hash')
-          .single()
-
         const userEmailHash = hashEmail(user.email!)
-        const isAdmin = adminConfig?.value === userEmailHash
+        const isAdmin = adminEmailHash === userEmailHash
 
         if (existingProfile.role !== (isAdmin ? 'admin' : 'learner')) {
           await supabase
@@ -101,7 +95,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Error loading profile:', error)
     }
-  }, [supabase])
+  }, [supabase, adminEmailHash])
 
   useEffect(() => {
     const getSession = async () => {
