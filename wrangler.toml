@@ -1,0 +1,10 @@
+name = "tubertify"
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+compatibility_date = "2026-05-05"
+
+[build]
+command = "npm run build"
+
+# For Cloudflare Pages deployments, you can use the CLI:
+# npm run pages:deploy
+# Replace YOUR_PROJECT_NAME and branch values in package.json before using.
