@@ -93,7 +93,6 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
 FIREBASE_ADMIN_SDK_KEY={"type":"service_account",...}
 
 NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
-OPENAI_API_KEY=sk_your_openai_api_key
 
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
 NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
@@ -109,7 +108,6 @@ NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
 
 For sensitive values (API keys), check the **"Encrypt"** option:
 - `FIREBASE_ADMIN_SDK_KEY`
-- `OPENAI_API_KEY`
 - `NEXT_PUBLIC_GEMINI_API_KEY`
 
 ### Step 3: Verify Build Configuration
@@ -231,7 +229,7 @@ If you have a domain:
 
 **Solution:**
 1. Verify API keys in Cloudflare environment variables
-2. Check Firebase/Gemini/OpenAI consoles for errors
+2. Check Firebase and Gemini consoles for errors
 3. Test locally with same credentials
 
 ### Database Connection Issues
@@ -253,7 +251,7 @@ If you have a domain:
 ### Regular Checks
 
 1. **Weekly**: Review error logs in Cloudflare Analytics
-2. **Monthly**: Check API usage and costs (Gemini, OpenAI)
+2. **Monthly**: Check API usage and costs (Gemini)
 3. **Quarterly**: Update dependencies: `npm update`
 
 ### Performance Optimization
@@ -266,8 +264,8 @@ If you have a domain:
 
 Cloudflare Pages scales automatically. For high traffic:
 1. Monitor usage in Analytics
-2. Consider upgrading OpenAI plan if token limits exceeded
-3. Monitor Gemini API usage
+2. Monitor Gemini API usage and quotas
+3. Adjust app usage if you near quota limits
 
 ---
 

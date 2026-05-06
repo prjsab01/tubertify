@@ -33,14 +33,6 @@ Use this checklist to ensure all services are configured correctly.
 - [ ] `NEXT_PUBLIC_GEMINI_API_KEY` copied
 - [ ] Free tier quota verified (1,500 requests/day)
 
-### OpenAI API
-- [ ] OpenAI account created
-- [ ] Billing information added (payment method)
-- [ ] API key generated from [OpenAI Platform](https://platform.openai.com/api-keys)
-- [ ] `OPENAI_API_KEY` copied and secured
-- [ ] Monthly spending limit set (recommend $10-20)
-- [ ] API key NOT committed to GitHub
-
 ## Phase 3: Environment Variables ✓
 
 - [ ] `.env.local` file created in project root
@@ -49,7 +41,6 @@ Use this checklist to ensure all services are configured correctly.
   - [ ] All `NEXT_PUBLIC_FIREBASE_*` variables
   - [ ] `FIREBASE_ADMIN_SDK_KEY`
   - [ ] `NEXT_PUBLIC_GEMINI_API_KEY`
-  - [ ] `OPENAI_API_KEY`
   - [ ] `NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID`
   - [ ] `NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME`
 
@@ -66,7 +57,6 @@ Use this checklist to ensure all services are configured correctly.
 - [ ] Firebase authentication works (sign up / sign in)
 - [ ] User profile created in Firestore after sign up
 - [ ] Gemini API responds: test at `/api/assistant`
-- [ ] OpenAI API responds: test at `/api/quiz` and `/api/summary`
 - [ ] Rate limiting functions correctly
 
 ### API Testing Commands
@@ -75,21 +65,9 @@ Use this checklist to ensure all services are configured correctly.
 curl -X POST http://localhost:3000/api/assistant \
   -H "Content-Type: application/json" \
   -d '{"userId":"test","question":"What is AI?","context":"Learning"}'
-
-# Test OpenAI (Quiz)
-curl -X POST http://localhost:3000/api/quiz \
-  -H "Content-Type: application/json" \
-  -d '{"userId":"test","topic":"Python","difficulty":"easy"}'
-
-# Test OpenAI (Summary)
-curl -X POST http://localhost:3000/api/summary \
-  -H "Content-Type: application/json" \
-  -d '{"userId":"test","content":"Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed. It involves the use of algorithms and statistical models to enable computers to understand and make decisions based on data."}'
 ```
 
 - [ ] Gemini API test successful
-- [ ] Quiz generation test successful
-- [ ] Summary generation test successful
 - [ ] No rate limit errors (initial requests should pass)
 
 ## Phase 5: Code Review ✓
@@ -97,12 +75,9 @@ curl -X POST http://localhost:3000/api/summary \
 - [ ] `lib/firebaseClient.ts` - Client-side Firebase initialized
 - [ ] `lib/firebaseAdmin.ts` - Server-side admin initialized
 - [ ] `lib/gemini.ts` - Gemini integration working
-- [ ] `lib/openai.ts` - OpenAI integration created
 - [ ] `components/Providers.tsx` - Auth context using Firebase
 - [ ] `app/api/assistant/route.ts` - Uses Gemini API
 - [ ] `app/api/ai-notes/route.ts` - Uses Gemini API
-- [ ] `app/api/quiz/route.ts` - Uses OpenAI API
-- [ ] `app/api/summary/route.ts` - Uses OpenAI API
 - [ ] `app/api/user/route.ts` - Creates Firebase users
 - [ ] No references to Supabase remaining
 - [ ] No hardcoded API keys in any files
@@ -135,7 +110,6 @@ curl -X POST http://localhost:3000/api/summary \
   - [ ] All `NEXT_PUBLIC_FIREBASE_*` variables
   - [ ] `FIREBASE_ADMIN_SDK_KEY` (marked as encrypted)
   - [ ] `NEXT_PUBLIC_GEMINI_API_KEY` (marked as encrypted)
-  - [ ] `OPENAI_API_KEY` (marked as encrypted)
   - [ ] `NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID`
   - [ ] `NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME`
 - [ ] Variables double-checked for typos
@@ -154,7 +128,6 @@ curl -X POST http://localhost:3000/api/summary \
 - [ ] Sign up/Login works in production
 - [ ] Firestore reads/writes work
 - [ ] Gemini API responds in production
-- [ ] OpenAI API responds in production
 - [ ] Console has no errors
 - [ ] All pages load quickly
 
@@ -176,7 +149,6 @@ curl -X POST http://localhost:3000/api/summary \
 - [ ] Error logging set up
 - [ ] Budget alerts configured:
   - [ ] Firebase spending limit
-  - [ ] OpenAI monthly limit ($10-20)
   - [ ] Gemini API monitoring enabled
 
 ## Phase 12: Documentation ✓
@@ -204,7 +176,6 @@ curl -X POST http://localhost:3000/api/summary \
 |-----------|--------|-------|
 | Firebase | ✅ Configured | Authentication & Firestore ready |
 | Gemini API | ✅ Configured | For AI note generation |
-| OpenAI API | ✅ Configured | For quiz & summary generation |
 | Cloudflare Pages | ✅ Ready | Awaiting deployment |
 | GitHub | ✅ Connected | Code pushed to repository |
 | Local Dev | ⏳ Testing | Verify all APIs work |
@@ -232,6 +203,5 @@ If you get stuck:
 4. Review service documentation:
    - [Firebase Docs](https://firebase.google.com/docs)
    - [Gemini API Docs](https://ai.google.dev/)
-   - [OpenAI Docs](https://platform.openai.com/docs)
    - [Cloudflare Docs](https://developers.cloudflare.com/pages/)
 

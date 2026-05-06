@@ -7,8 +7,7 @@ Quick reference for all API keys and services used in Tubertify.
 | Service | Purpose | Cost | Key Type | Used For |
 |---------|---------|------|----------|----------|
 | Firebase | Authentication & Database | Free tier available | Client + Admin | User auth, data storage |
-| Gemini API | AI text generation | Free tier available | REST API Key | Course content, study notes |
-| OpenAI | Advanced AI/Chatbot | $0.002-0.01 per 1K tokens | REST API Key | Quiz generation, summaries |
+| Gemini API | AI text generation | Free tier available | REST API Key | Course content, study notes, quizzes |
 | Cloudflare Pages | Hosting & CDN | Free tier available | Account ID | Production deployment |
 
 ---
@@ -118,74 +117,7 @@ Tubertify implements per-user limits:
 
 ---
 
-## 3. OpenAI API
-
-**What it does**: Advanced AI (ChatGPT, GPT-4)
-
-**Cost**: Pay-per-token model
-- **GPT-3.5 Turbo**: ~$0.0005 per 1K tokens
-- **GPT-4**: ~$0.03 per 1K tokens
-
-### Getting OpenAI API Key
-
-1. Go to [OpenAI Platform](https://platform.openai.com)
-2. Sign in or create account
-3. Go to **"API Keys"** (left sidebar)
-4. Click **"Create new secret key"**
-5. Copy immediately (you can't see it again!)
-6. Set as `OPENAI_API_KEY` in `.env.local`
-
-**⚠️ IMPORTANT**: 
-- Never share this key!
-- Don't commit to GitHub!
-- Regenerate if accidentally exposed!
-
-### Setting Up Billing
-
-1. Go to [OpenAI Billing](https://platform.openai.com/account/billing/overview)
-2. Add payment method (credit card)
-3. Set usage limits to prevent surprises:
-   - Go to **"Billing limits"**
-   - Set monthly limit (e.g., $10-20)
-
-### Used In
-
-- `lib/openai.ts` - OpenAI API integration
-- `app/api/quiz/route.ts` - Quiz generation (when created)
-- `app/api/summary/route.ts` - Summary generation (when created)
-
-### Available Functions
-
-```typescript
-// Generate completion
-getOpenAICompletion(request: CompletionRequest): Promise<CompletionResponse>
-
-// Generate quiz questions
-generateQuizWithOpenAI(topic: string, difficulty: "easy" | "medium" | "hard"): Promise<any[]>
-
-// Generate text summary
-generateSummaryWithOpenAI(content: string): Promise<string>
-```
-
-### Example Usage
-
-```javascript
-import { generateQuizWithOpenAI } from '@/lib/openai';
-
-const questions = await generateQuizWithOpenAI('Python Basics', 'medium');
-console.log(questions);
-```
-
-### Cost Estimation
-
-For typical usage:
-- 1,000 API calls = ~$0.50-$2.00
-- Set monthly budget to avoid surprises
-- Monitor usage in [OpenAI Dashboard](https://platform.openai.com/account/usage/overview)
-
----
-
-## 4. Cloudflare Pages
+## 3. Cloudflare Pages
 
 **What it does**: Hosting and global CDN
 
@@ -237,9 +169,6 @@ FIREBASE_ADMIN_SDK_KEY={"type":"service_account",...}
 # Gemini (get from Google AI Studio)
 NEXT_PUBLIC_GEMINI_API_KEY=<your_gemini_key>
 
-# OpenAI (get from OpenAI Platform)
-OPENAI_API_KEY=sk-<your_openai_key>
-
 # Cloudflare (get from Dashboard)
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=<account_id>
 NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
@@ -276,11 +205,6 @@ NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
 - Check **"Billing"** section
 - View API usage by service
 
-### OpenAI
-- Go to [OpenAI Usage](https://platform.openai.com/account/usage/overview)
-- View costs by model and date
-- Set hard limits in Billing settings
-
 ---
 
 ## Troubleshooting
@@ -298,13 +222,12 @@ NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
 
 ### "Unauthorized" error
 - Firebase: Check Firestore security rules
-- OpenAI: Verify billing is set up
 - Gemini: Check API is enabled in Google Cloud
 
-### High costs
-- Set billing alerts in respective dashboards
-- Review usage patterns
-- Optimize API calls (cache results when possible)
+### "Rate limit exceeded"
+- Wait before making more requests
+- Free tier allows 1,500 requests/day for Gemini
+- Upgrade to paid plan if needed
 
 ---
 
@@ -312,6 +235,5 @@ NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
 
 - [Firebase Docs](https://firebase.google.com/docs)
 - [Gemini API Docs](https://ai.google.dev/tutorials/python_quickstart)
-- [OpenAI API Docs](https://platform.openai.com/docs/api-reference)
 - [Cloudflare Pages Docs](https://developers.cloudflare.com/pages/)
 

@@ -7,9 +7,6 @@ All the configuration and setup has been completed! Here's what's been done and 
 ## 🎯 What Has Been Done
 
 ### 1. **Project Configuration** ✅
-- ✅ OpenAI API integration added (`lib/openai.ts`)
-- ✅ Quiz generation API endpoint created (`app/api/quiz/route.ts`)
-- ✅ Summary generation API endpoint created (`app/api/summary/route.ts`)
 - ✅ Dependencies updated (`package.json`)
 - ✅ Wrangler configuration updated for Cloudflare Pages
 - ✅ Environment variables template updated (`.env.local.example`)
@@ -35,7 +32,6 @@ All code is organized and ready:
 ✅ Database: Firestore
 ✅ AI Services:
    - Gemini API (study notes, content generation)
-   - OpenAI API (quizzes, summaries)
 ✅ Deployment: Cloudflare Pages
 ✅ All API endpoints configured with rate limiting
 ```
@@ -57,7 +53,6 @@ You need to get API keys from 4 services. Follow this table:
 |---------|------|--------|--------|
 | Firebase | [console.firebase.google.com](https://console.firebase.google.com/) | Create project + get config | 6 Firebase values + JSON file |
 | Gemini | [makersuite.google.com](https://makersuite.google.com/app/apikey) | Create API key | 1 API key |
-| OpenAI | [platform.openai.com](https://platform.openai.com) | Create API key + add billing | 1 API key |
 | Cloudflare | [cloudflare.com](https://cloudflare.com) | Sign up + copy account ID | 1 account ID |
 
 **👉 Easiest way:** Follow [QUICKSTART.md](./QUICKSTART.md) - it walks you through each one step-by-step!
@@ -76,7 +71,6 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
 NEXT_PUBLIC_FIREBASE_APP_ID=...
 FIREBASE_ADMIN_SDK_KEY={"type":"service_account",...}
 NEXT_PUBLIC_GEMINI_API_KEY=...
-OPENAI_API_KEY=sk-...
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=...
 NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
 ```
@@ -144,8 +138,6 @@ You should see the app loading! Test:
 │  Backend (API Routes)                              │
 │  ├─ /api/assistant      → Gemini API               │
 │  ├─ /api/ai-notes       → Gemini API               │
-│  ├─ /api/quiz           → OpenAI API               │
-│  ├─ /api/summary        → OpenAI API               │
 │  ├─ /api/course         → Firestore                │
 │  └─ /api/user           → Firebase Admin           │
 │                                                     │
@@ -160,10 +152,6 @@ You should see the app loading! Test:
 │  🤖 Google Gemini API                              │
 │     ├─ Study Notes                                 │
 │     └─ Course Content                              │
-│                                                     │
-│  🧠 OpenAI API                                      │
-│     ├─ Quiz Generation                             │
-│     └─ Summary Generation                          │
 │                                                     │
 │  ☁️  Cloudflare Pages                              │
 │     ├─ Global CDN                                  │
@@ -180,11 +168,10 @@ You should see the app loading! Test:
 |---------|-----------|--------------|
 | **Firebase** | ✅ YES | Free (generous limits) |
 | **Gemini API** | ✅ YES (1,500 req/day) | Free |
-| **OpenAI** | ❌ NO | $0-20/month* |
 | **Cloudflare** | ✅ YES | Free (unlimited) |
-| **TOTAL** | | **~$0-20/month** |
+| **TOTAL** | | **FREE** |
 
-*Depends on usage. Set spending limit to prevent surprises!
+*Depends on usage. Monitor your API calls and keep keys secure.
 
 ---
 
@@ -198,18 +185,6 @@ POST /api/assistant
 
 POST /api/ai-notes
 - Generate study notes from transcripts
-- Rate limit: 5/day per user
-```
-
-### **OpenAI API Endpoints**
-```
-POST /api/quiz
-- Generate quiz questions
-- Difficulty: easy, medium, hard
-- Rate limit: 3/day per user
-
-POST /api/summary
-- Generate text summaries
 - Rate limit: 5/day per user
 ```
 
@@ -238,7 +213,6 @@ POST /api/user          - Create user profile
 
 ⚠️ **You Need To Do:**
 - [ ] Add environment variables to Cloudflare (marked as encrypted)
-- [ ] Set spending limit on OpenAI account
 - [ ] Enable Firestore security rules in Firebase Console
 - [ ] Monitor API usage regularly
 
@@ -265,7 +239,6 @@ POST /api/user          - Create user profile
 - Firebase authentication (Google + Email)
 - Firestore database with security rules
 - Gemini API integration for AI features
-- OpenAI API integration for quizzes/summaries
 - API rate limiting per user
 - Cloudflare Pages deployment setup
 - TypeScript types for all APIs
@@ -285,7 +258,6 @@ If you want to understand the technologies better:
 - [Firebase Documentation](https://firebase.google.com/docs)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Google Gemini API Guide](https://ai.google.dev/tutorials/python_quickstart)
-- [OpenAI API Reference](https://platform.openai.com/docs/api-reference)
 - [Cloudflare Pages Docs](https://developers.cloudflare.com/pages/)
 - [React Documentation](https://react.dev)
 

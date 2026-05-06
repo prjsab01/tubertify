@@ -7,10 +7,9 @@
 ## What You Need (Before You Start)
 
 1. **A Google Account** - for Firebase and Gemini API (FREE)
-2. **An OpenAI Account** - for ChatGPT API ($5-20/month typical)
-3. **A Cloudflare Account** - for hosting (FREE)
-4. **GitHub Account** - to push code (FREE)
-5. **Installed on your computer**: Node.js ([download](https://nodejs.org/) v18 or newer)
+2. **A Cloudflare Account** - for hosting (FREE)
+3. **GitHub Account** - to push code (FREE)
+4. **Installed on your computer**: Node.js ([download](https://nodejs.org/) v18 or newer)
 
 ---
 
@@ -41,17 +40,14 @@
 
 **Done with Gemini! ✅**
 
-### OpenAI (ChatGPT)
-1. Go to [platform.openai.com](https://platform.openai.com)
-2. Sign up or sign in
-3. Go to **API Keys** (left sidebar)
-4. Click **"Create new secret key"**
-5. **Copy immediately** (you won't see it again!)
-6. Go to **Billing** → add your credit card
-
-**Done with OpenAI! ✅**
-
 ### Cloudflare
+1. Go to [cloudflare.com](https://cloudflare.com)
+2. Click **"Sign up"**
+3. Enter email and password
+4. After signing in, go to **Account Home** (top-left)
+5. Scroll down and copy your **Account ID**
+
+**Done with Cloudflare! ✅**
 1. Go to [cloudflare.com](https://cloudflare.com)
 2. Click **"Sign up"**
 3. Enter email and password
@@ -76,7 +72,6 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 FIREBASE_ADMIN_SDK_KEY={"type":"service_account","project_id":"your-project",...}
 
 NEXT_PUBLIC_GEMINI_API_KEY=paste_your_gemini_key_here
-OPENAI_API_KEY=sk-paste_your_openai_key_here
 
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=paste_your_cloudflare_account_id
 NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
@@ -152,10 +147,9 @@ Your app is deployed! 🎉
 **Monthly breakdown:**
 - Firebase: **FREE** (generous free tier)
 - Gemini: **FREE** (1,500 requests/day)
-- OpenAI: **$0-20/month** (depends on usage, start small)
 - Cloudflare: **FREE** (unlimited requests)
 
-**Total: Mostly FREE! ✅** (just set budget on OpenAI)
+**Total: FREE! ✅**
 
 ---
 
@@ -164,14 +158,14 @@ Your app is deployed! 🎉
 ✅ **DO:**
 - Save your API keys safely
 - Add `.env.local` to `.gitignore` (already done)
-- Monitor OpenAI usage to avoid surprises
+- Monitor Gemini usage to avoid surprises
 - Test locally before deploying
 
 ❌ **DON'T:**
 - Commit `.env.local` to GitHub
 - Share API keys in emails/chat
 - Leave API keys in code comments
-- Forget to set OpenAI billing limit
+- Forget to set spending limits on API usage
 
 ---
 

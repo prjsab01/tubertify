@@ -1,12 +1,11 @@
 # Tubertify - AI-Powered Learning Platform
 
-Tubertify is a modern learning platform that leverages AI to create personalized educational experiences. Built with Next.js, Firebase, Gemini AI, and OpenAI.
+Tubertify is a modern learning platform that leverages AI to create personalized educational experiences. Built with Next.js, Firebase, and Gemini AI.
 
 ## 🚀 Features
 
 - **AI-Powered Learning**
   - 🤖 Gemini AI for course content and study notes
-  - 🧠 OpenAI for intelligent quiz generation
   - 📝 Automatic study materials from video transcripts
 
 - **User Management**
@@ -34,7 +33,6 @@ Tubertify is a modern learning platform that leverages AI to create personalized
 - **Authentication**: Firebase Auth
 - **AI Services**:
   - Google Gemini API (study notes, content generation)
-  - OpenAI API (quiz generation, summaries)
 - **Deployment**: Cloudflare Pages
 - **Hosting**: Wrangler CLI
 
@@ -72,8 +70,6 @@ tubertify/
 │   ├── api/                 # API routes
 │   │   ├── ai-notes/        # Generate study notes (Gemini)
 │   │   ├── assistant/       # AI assistant (Gemini)
-│   │   ├── quiz/            # Generate quizzes (OpenAI)
-│   │   ├── summary/         # Generate summaries (OpenAI)
 │   │   ├── course/          # Course management
 │   │   ├── playlist/        # Playlist management
 │   │   └── user/            # User management
@@ -86,7 +82,6 @@ tubertify/
 │   ├── firebaseClient.ts    # Firebase client config
 │   ├── firebaseAdmin.ts     # Firebase admin config
 │   ├── gemini.ts            # Gemini API integration
-│   ├── openai.ts            # OpenAI API integration
 │   ├── firestore-tubertify.ts # Firestore utilities
 │   ├── auth.ts              # Auth utilities
 │   ├── types.ts             # TypeScript types
@@ -116,7 +111,6 @@ FIREBASE_ADMIN_SDK_KEY={"type":"service_account",...}
 
 # AI APIs
 NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
-OPENAI_API_KEY=sk-your_openai_api_key
 
 # Cloudflare
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=your_account_id
@@ -193,24 +187,6 @@ Returns: { notes }
 Limit: 5/day per user
 ```
 
-### OpenAI Endpoints
-
-**Quiz Generation**
-```
-POST /api/quiz
-Body: { userId, topic, difficulty }
-Returns: { questions }
-Limit: 3/day per user
-```
-
-**Summary Generation**
-```
-POST /api/summary
-Body: { userId, content, title }
-Returns: { summary }
-Limit: 5/day per user
-```
-
 ### Course Management
 
 **Get Courses**
@@ -247,7 +223,6 @@ Returns: { course }
 - DDoS protection
 
 ### API Usage
-- OpenAI: [platform.openai.com/account/usage](https://platform.openai.com/account/usage)
 - Gemini: Google Cloud Console
 - Firebase: Firebase Console
 
@@ -257,9 +232,8 @@ Returns: { course }
 |---------|-----------|--------------|
 | Firebase | 25k auth/month, 1GB storage | FREE |
 | Gemini | 1,500 requests/day | FREE |
-| OpenAI | - | $0-20/month |
 | Cloudflare | Unlimited requests | FREE |
-| **Total** | | **~$0-20/month** |
+| **Total** | | **FREE** |
 
 ## 🐛 Troubleshooting
 
@@ -304,7 +278,7 @@ MIT License - feel free to use this project for personal or commercial purposes.
 ## 💬 Support
 
 - Check the documentation files listed above
-- Review Firebase, OpenAI, and Gemini documentation
+- Review Firebase and Gemini documentation
 - Check Cloudflare Pages docs for deployment help
 
 ## 🎯 Next Steps

@@ -56,12 +56,6 @@ Each service does a specific job. You need to "turn them on" by getting API keys
 - Creates educational content
 - **Cost:** Free (1,500 requests per day)
 
-### 🧠 **OpenAI API** (By the company that made ChatGPT)
-- Creates quiz questions
-- Summarizes long text
-- Like ChatGPT but you control it
-- **Cost:** $0-20/month (very cheap)
-
 ### ☁️ **Cloudflare** (Hosting company)
 - Puts your app on the internet
 - Makes it super fast worldwide
@@ -107,18 +101,14 @@ You need to "turn on" 4 services and get keys. Think of it like getting password
 
 **SAVE THIS VALUE**
 
-#### C) OpenAI API (ChatGPT)
-1. Go to: https://platform.openai.com
-2. Sign up or sign in
-3. Go to "API Keys" (left menu)
-4. Click "Create new secret key"
-5. **COPY IT IMMEDIATELY** (you won't see it again!)
-6. Go to "Billing" and add your credit card
-7. Set a spending limit (like $20/month)
-
-**SAVE THIS VALUE - VERY IMPORTANT!**
-
 #### D) Cloudflare (Hosting)
+1. Go to: https://www.cloudflare.com
+2. Click "Sign up"
+3. Create an account
+4. Go to "Account Home" (top-left)
+5. Find your "Account ID" and copy it
+
+**SAVE THIS VALUE**
 1. Go to: https://www.cloudflare.com
 2. Click "Sign up"
 3. Create an account
@@ -149,7 +139,6 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
 FIREBASE_ADMIN_SDK_KEY={"type":"service_account","project_id":"your-project",...}
 
 NEXT_PUBLIC_GEMINI_API_KEY=paste_your_gemini_key_here
-OPENAI_API_KEY=sk-paste_your_openai_key_here
 
 NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=paste_your_cloudflare_account_id_here
 NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
@@ -219,11 +208,8 @@ npm run dev
 |---------|-----------|------|
 | Firebase | **FREE** | Generous free tier |
 | Gemini | **FREE** | 1,500 requests/day included |
-| OpenAI | **$0-20** | Based on usage |
 | Cloudflare | **FREE** | Unlimited requests |
-| **TOTAL** | **~$0-20/month** | Very affordable! |
-
-**💡 TIP:** Set a spending limit on OpenAI ($20) so you don't get surprised bills.
+| **TOTAL** | **FREE** | Mostly free with Gemini and Firebase |
 
 ---
 
@@ -244,7 +230,6 @@ npm run dev
 - **`app/api/ai-notes/route.ts`** - AI generating study notes
 - **`app/api/quiz/route.ts`** - AI creating quizzes
 - **`app/api/summary/route.ts`** - AI summarizing text
-- **`lib/openai.ts`** - ChatGPT integration
 - **`lib/gemini.ts`** - Google Gemini integration
 
 ---
@@ -273,7 +258,6 @@ npm run dev
 
 ### "Site not working after deployment"
 → Check environment variables in Cloudflare are set
-→ Check if OpenAI has a billing issue
 → Look at Cloudflare build logs
 
 ---
@@ -286,9 +270,9 @@ npm run dev
    - See how many users signed up
    - Check your database
 
-2. **OpenAI Usage** → https://platform.openai.com/account/usage/overview
+2. **Gemini Usage** → https://makersuite.google.com/app/apikey
    - See how much you've used
-   - Check your spending
+   - Check your usage limits
 
 3. **Cloudflare Analytics** → Your Cloudflare dashboard
    - See how many people visited
@@ -302,7 +286,7 @@ npm run dev
 - Keep `.env.local` safe (never share!)
 - Never commit `.env.local` to GitHub
 - Keep API keys secret
-- Set spending limits on OpenAI
+- Set spending limits on API usage
 - Monitor your API usage regularly
 
 ### ❌ DON'T:
@@ -310,7 +294,7 @@ npm run dev
 - Share `.env.local` via email
 - Tell people your API keys
 - Leave `.env.local` in GitHub
-- Forget to set OpenAI spending limit
+- Forget to monitor your API usage
 
 ---
 
@@ -352,7 +336,7 @@ npm run dev
 - **API questions?** Check [API_KEYS_GUIDE.md](./API_KEYS_GUIDE.md)
 - **Deployment questions?** Check [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
 - **Setup questions?** Check [SETUP_GUIDE.md](./SETUP_GUIDE.md)
-- **Service docs:** Google them (Firebase docs, OpenAI docs, etc.)
+- **Service docs:** Google them (Firebase docs, Gemini docs, etc.)
 
 ---
 

@@ -1,6 +1,6 @@
 # Tubertify - Complete Setup Guide
 
-This guide walks you through setting up Tubertify with Firebase, Gemini API, OpenAI API, and Cloudflare Pages deployment.
+This guide walks you through setting up Tubertify with Firebase, Gemini API, and Cloudflare Pages deployment.
 
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
@@ -126,16 +126,6 @@ const firebaseConfig = {
 5. Copy the API key
 6. Set as `NEXT_PUBLIC_GEMINI_API_KEY` in `.env.local`
 
-### OpenAI API Key
-
-1. Go to [OpenAI Platform](https://platform.openai.com/api-keys)
-2. Sign in or create an account
-3. Click **"Create new secret key"**
-4. Copy the key immediately (you won't see it again)
-5. Set as `OPENAI_API_KEY` in `.env.local`
-
-**Important**: You'll need a billing plan on OpenAI to use the API. Set up payment in Account Settings.
-
 ---
 
 ## Environment Variables
@@ -160,7 +150,6 @@ FIREBASE_ADMIN_SDK_KEY={"type":"service_account","project_id":"..."}
 # AI API Keys
 # ========================
 NEXT_PUBLIC_GEMINI_API_KEY=YOUR_GEMINI_KEY
-OPENAI_API_KEY=sk-YOUR_OPENAI_KEY
 
 # ========================
 # Cloudflare Configuration
@@ -258,16 +247,14 @@ curl -X POST http://localhost:3000/api/ai-notes \
 2. Check key hasn't expired in Google AI Studio
 3. Restart dev server
 
-### OpenAI API Errors
+### Firestore Rules Blocking Access
 
-**Problem**: "403 Forbidden" or billing issues
+**Problem**: "Permission denied" errors
 
 **Solution**:
-1. Verify `OPENAI_API_KEY` is correct
-2. Check OpenAI account has active billing
-3. Verify API key has access to required models
-
-### Firestore Rules Blocking Access
+1. Check Firestore Rules in Firebase Console
+2. Ensure rules allow read/write for authenticated users
+3. Verify document paths match rule paths
 
 **Problem**: "Permission denied" errors
 
