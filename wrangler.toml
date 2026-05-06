@@ -1,10 +1,29 @@
 name = "tubertify"
+type = "javascript"
 account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
 compatibility_date = "2026-05-05"
+compatibility_flags = ["nodejs_compat"]
 
+# Build configuration
 [build]
 command = "npm run build"
+cwd = "./"
+watch_paths = ["app/**/*.ts", "app/**/*.tsx", "lib/**/*.ts", "components/**/*.tsx"]
 
-# For Cloudflare Pages deployments, you can use the CLI:
-# npm run pages:deploy
-# Replace YOUR_PROJECT_NAME and branch values in package.json before using.
+# Environment variables for development
+[env.production]
+name = "tubertify-prod"
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+
+[env.staging]
+name = "tubertify-staging"
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+
+# Cloudflare Pages configuration
+# Note: When deploying via Cloudflare Pages UI, these environment variables 
+# must be set in the Pages project settings for the appropriate environment
+
+# Build caching configuration
+[build.upload]
+format = "service-worker"
+

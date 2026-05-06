@@ -1,77 +1,319 @@
-# AI Course Builder
+# Tubertify - AI-Powered Learning Platform
 
-A starter Next.js app for creating module-based courses from YouTube playlists, with AI-powered notes and a helper assistant.
+Tubertify is a modern learning platform that leverages AI to create personalized educational experiences. Built with Next.js, Firebase, Gemini AI, and OpenAI.
 
-## Setup
+## 🚀 Features
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Create a `.env.local` file in the project root from `.env.local.example` and add your values.
-3. Run the app:
-   ```bash
-   npm run dev
-   ```
+- **AI-Powered Learning**
+  - 🤖 Gemini AI for course content and study notes
+  - 🧠 OpenAI for intelligent quiz generation
+  - 📝 Automatic study materials from video transcripts
 
-## Firebase Setup
+- **User Management**
+  - 🔐 Secure authentication (Google, Email/Password)
+  - 👤 Personalized user profiles
+  - 📊 Learning progress tracking
 
-1. Create a Firebase project at https://console.firebase.google.com.
-2. Enable Authentication and choose Email/Password and Google sign-in.
-3. Enable Firestore in test mode for development.
-4. Copy the Firebase config values into `.env.local` using the `NEXT_PUBLIC_FIREBASE_*` names.
+- **Learning Tools**
+  - 📚 Course management
+  - 🎥 Video integration with YouTube
+  - 🧪 AI-generated quizzes
+  - 📋 Automated study notes
+  - 💡 Contextual AI assistance
 
-Example `.env.local` values:
-```bash
-NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
-OPENAI_API_KEY=your_openai_api_key
-YOUTUBE_API_KEY=your_youtube_api_key
+- **Scalable Infrastructure**
+  - ☁️ Firebase for database and auth
+  - 📡 Cloudflare Pages for global deployment
+  - ⚡ Optimized performance with CDN
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **Backend**: Node.js API Routes, Firebase Admin SDK
+- **Database**: Firestore
+- **Authentication**: Firebase Auth
+- **AI Services**:
+  - Google Gemini API (study notes, content generation)
+  - OpenAI API (quiz generation, summaries)
+- **Deployment**: Cloudflare Pages
+- **Hosting**: Wrangler CLI
+
+## ⚡ Quick Start
+
+**New to this? Start here:**
+
+→ **[QUICKSTART.md](./QUICKSTART.md)** - 5-minute setup guide
+
+**For detailed setup:**
+
+→ **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Complete setup instructions
+
+**Need deployment help?**
+
+→ **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Cloudflare Pages deployment
+
+## 📋 Setup Checklist
+
+Follow this to ensure everything is set up correctly:
+
+→ **[SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md)** - Complete checklist
+
+## 🔑 API Keys & Services
+
+Understanding what each service does and how to get API keys:
+
+→ **[API_KEYS_GUIDE.md](./API_KEYS_GUIDE.md)** - API keys and services guide
+
+## 📁 Project Structure
+
+```
+tubertify/
+├── app/
+│   ├── api/                 # API routes
+│   │   ├── ai-notes/        # Generate study notes (Gemini)
+│   │   ├── assistant/       # AI assistant (Gemini)
+│   │   ├── quiz/            # Generate quizzes (OpenAI)
+│   │   ├── summary/         # Generate summaries (OpenAI)
+│   │   ├── course/          # Course management
+│   │   ├── playlist/        # Playlist management
+│   │   └── user/            # User management
+│   ├── layout.tsx           # Root layout
+│   ├── page.tsx             # Home page
+│   └── course/[id]/         # Course detail page
+├── components/
+│   └── Providers.tsx        # Auth context provider
+├── lib/
+│   ├── firebaseClient.ts    # Firebase client config
+│   ├── firebaseAdmin.ts     # Firebase admin config
+│   ├── gemini.ts            # Gemini API integration
+│   ├── openai.ts            # OpenAI API integration
+│   ├── firestore-tubertify.ts # Firestore utilities
+│   ├── auth.ts              # Auth utilities
+│   ├── types.ts             # TypeScript types
+│   └── youtube.ts           # YouTube integration
+├── .env.local.example       # Environment variables template
+├── SETUP_GUIDE.md           # Detailed setup guide
+├── DEPLOYMENT_GUIDE.md      # Deployment to Cloudflare
+├── API_KEYS_GUIDE.md        # API keys reference
+├── SETUP_CHECKLIST.md       # Setup verification checklist
+├── QUICKSTART.md            # Quick start guide
+└── wrangler.toml            # Cloudflare Pages config
 ```
 
-## Deploy to Cloudflare Pages
+## 🔒 Environment Variables
 
-1. Create a Cloudflare Pages site and connect your Git repository.
-2. In the Pages build settings, set:
-   - Build command: `npm run build`
-   - Build output directory: `.next`
-3. Add the same env vars in Cloudflare Pages as secrets:
-   - `NEXT_PUBLIC_FIREBASE_API_KEY`
-   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
-   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
-   - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
-   - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
-   - `NEXT_PUBLIC_FIREBASE_APP_ID`
-   - `OPENAI_API_KEY`
-   - `YOUTUBE_API_KEY`
-4. If you want to deploy from the command line, install Wrangler and run:
-   ```bash
-   npm run pages:deploy
-   ```
+Required environment variables (create `.env.local` file):
 
-> Note: Cloudflare Pages can build the app using the standard Next.js build output. If you want to use the CLI, `wrangler pages deploy` is available for manual deployment.
+```env
+# Firebase
+NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+FIREBASE_ADMIN_SDK_KEY={"type":"service_account",...}
 
-## Files and placeholders
+# AI APIs
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+OPENAI_API_KEY=sk-your_openai_api_key
 
-- `lib/firebaseClient.ts` — Firebase client initialization.
-- `lib/auth.ts` — Firebase auth helpers for login/register/logout.
-- `lib/firestore.ts` — Firestore helpers for saving and loading courses.
-- `lib/firebaseAdmin.ts` — Placeholder for future server-side Firebase Admin setup.
-- `app/page.tsx` — Main page with auth, playlist import, course builder, AI assistant, and Firestore save.
-- `.env.local.example` — Environment variable template.
+# Cloudflare
+NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID=your_account_id
+NEXT_PUBLIC_CLOUDFLARE_PROJECT_NAME=tubertify
+```
 
-## What to add
+See [.env.local.example](.env.local.example) for details.
 
-- In `.env.local`, add your Firebase config and API keys.
-- `YOUTUBE_API_KEY` is used for playlist import.
-- `OPENAI_API_KEY` is used for AI assistant requests.
-- If you want backend admin access later, set `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PROJECT_ID`.
+## 💻 Local Development
 
-## Notes
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- All environment variables configured
 
-- The current app uses Firebase Auth and Firestore from the client side.
-- You can extend with server-side API routes and Firebase Admin security later.
+### Setup
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Set up environment variables
+# Create .env.local file with values from SETUP_GUIDE.md
+
+# 3. Start development server
+npm run dev
+```
+
+Visit `http://localhost:3000` - your app is running!
+
+### Available Commands
+
+```bash
+npm run dev        # Start development server
+npm run build      # Build for production
+npm start          # Start production server
+npm run lint       # Run ESLint
+npm run pages:dev  # Test Cloudflare Pages locally
+```
+
+## 🚀 Deployment
+
+### Automatic Deployment (Recommended)
+
+1. Push to GitHub `main` branch
+2. Cloudflare automatically deploys
+3. Live at `https://tubertify.pages.dev`
+
+See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions.
+
+### Manual Deployment
+
+```bash
+npm run pages:deploy
+```
+
+## 📊 API Endpoints
+
+### Gemini AI Endpoints
+
+**Assistant (Q&A)**
+```
+POST /api/assistant
+Body: { userId, question, context }
+Returns: { answer }
+Limit: 10/day per user
+```
+
+**Study Notes**
+```
+POST /api/ai-notes
+Body: { userId, courseId, moduleId, videoId, title, transcript }
+Returns: { notes }
+Limit: 5/day per user
+```
+
+### OpenAI Endpoints
+
+**Quiz Generation**
+```
+POST /api/quiz
+Body: { userId, topic, difficulty }
+Returns: { questions }
+Limit: 3/day per user
+```
+
+**Summary Generation**
+```
+POST /api/summary
+Body: { userId, content, title }
+Returns: { summary }
+Limit: 5/day per user
+```
+
+### Course Management
+
+**Get Courses**
+```
+GET /api/course
+Returns: { courses }
+```
+
+**Get Course by ID**
+```
+GET /api/course/[id]
+Returns: { course }
+```
+
+## 🔐 Security
+
+- All API keys stored in `.env.local` (never committed)
+- Firestore security rules enforce user data isolation
+- Firebase Auth handles secure authentication
+- API rate limiting prevents abuse
+- HTTPS/SSL on all connections (Cloudflare)
+
+## 📈 Monitoring
+
+### Firebase Console
+- User authentication logs
+- Firestore data storage
+- Real-time database monitoring
+
+### Cloudflare Dashboard
+- Request analytics
+- Performance metrics
+- Error tracking
+- DDoS protection
+
+### API Usage
+- OpenAI: [platform.openai.com/account/usage](https://platform.openai.com/account/usage)
+- Gemini: Google Cloud Console
+- Firebase: Firebase Console
+
+## 💰 Cost Estimation
+
+| Service | Free Tier | Typical Cost |
+|---------|-----------|--------------|
+| Firebase | 25k auth/month, 1GB storage | FREE |
+| Gemini | 1,500 requests/day | FREE |
+| OpenAI | - | $0-20/month |
+| Cloudflare | Unlimited requests | FREE |
+| **Total** | | **~$0-20/month** |
+
+## 🐛 Troubleshooting
+
+### Firebase Issues
+- Check environment variables
+- Verify Firestore security rules
+- Check Firebase Console logs
+
+### AI API Issues
+- Verify API keys are correct
+- Check API key billing/credits
+- Review rate limits
+
+### Deployment Issues
+- Check Cloudflare build logs
+- Verify environment variables in Cloudflare
+- Check GitHub connection
+
+**For detailed troubleshooting:** See [SETUP_GUIDE.md](./SETUP_GUIDE.md#troubleshooting)
+
+## 📚 Documentation
+
+- [QUICKSTART.md](./QUICKSTART.md) - 5-minute setup
+- [SETUP_GUIDE.md](./SETUP_GUIDE.md) - Complete setup instructions
+- [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) - Cloudflare deployment
+- [API_KEYS_GUIDE.md](./API_KEYS_GUIDE.md) - API reference
+- [SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md) - Verification checklist
+- [TUBERTIFY_ARCHITECTURE_SUMMARY.md](./TUBERTIFY_ARCHITECTURE_SUMMARY.md) - Technical architecture
+
+## 🤝 Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Test locally with `npm run dev`
+4. Push to GitHub
+5. Create a Pull Request
+
+## 📝 License
+
+MIT License - feel free to use this project for personal or commercial purposes.
+
+## 💬 Support
+
+- Check the documentation files listed above
+- Review Firebase, OpenAI, and Gemini documentation
+- Check Cloudflare Pages docs for deployment help
+
+## 🎯 Next Steps
+
+1. **New users:** Follow [QUICKSTART.md](./QUICKSTART.md)
+2. **Need setup help:** Read [SETUP_GUIDE.md](./SETUP_GUIDE.md)
+3. **Ready to deploy:** See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+4. **Verify everything:** Use [SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md)
+
+---
+
+**Built with ❤️ using modern web technologies**
