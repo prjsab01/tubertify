@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged, signOut as firebaseSignOut, User } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../lib/firebaseClient";
 import type { UserProfile } from "../lib/types";
@@ -10,12 +10,14 @@ interface AuthContextType {
   user: User | null;
   profile: UserProfile | null;
   loading: boolean;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   profile: null,
   loading: true,
+  signOut: async () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -23,12 +25,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const signOut = async () => {
+    if (auth) {
+      await firebaseSignOut(auth);
+    }
+  };
+
   useEffect(() => {
+    if (!auth || !db) {
+      setLoading(false);
+      return;
+    }
+
+    const firestore = db;
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
 
       if (firebaseUser) {
-        const profileRef = doc(db, "users", firebaseUser.uid);
+        const profileRef = doc(firestore, "users", firebaseUser.uid);
         const profileSnap = await getDoc(profileRef);
 
         if (profileSnap.exists()) {
@@ -63,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading }}>
+    <AuthContext.Provider value={{ user, profile, loading, signOut }}>
       {children}
     </AuthContext.Provider>
   );

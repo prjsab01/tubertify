@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useAuth } from './providers'
+import { useAuth } from './Providers'
 import { Button } from './ui/button'
 import { useRouter, usePathname } from 'next/navigation'
 import {

@@ -1,9 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { AssistantRequest, AssistantResponse } from "./types";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-
-export async function askGemini(request: AssistantRequest): Promise<AssistantResponse> {
+export async function askGemini(request: AssistantRequest, apiKey: string): Promise<AssistantResponse> {
+  const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   const prompt = `Context: ${request.context}

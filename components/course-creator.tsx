@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { Button } from './ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { useAuth } from './providers'
+import { useAuth } from './Providers'
 import { isValidYouTubeUrl } from '../lib/utils'
 import { motion } from 'framer-motion'
 import { LoadingSpinner } from './loading'
-import { Youtube, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
+import { PlayCircle, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
 
 export function CourseCreator() {
   const { user } = useAuth()
@@ -41,7 +41,7 @@ export function CourseCreator() {
         },
         body: JSON.stringify({
           url: url.trim(),
-          userId: user?.id
+          userId: user?.uid
         })
       })
 
@@ -64,7 +64,7 @@ export function CourseCreator() {
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center">
-          <Youtube className="mr-2 h-6 w-6 text-red-500" />
+          <PlayCircle className="mr-2 h-6 w-6 text-red-500" />
           Create Course from YouTube
         </CardTitle>
         <CardDescription>

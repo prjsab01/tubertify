@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { useAuth } from '../../components/providers'
-import { createSupabaseClient } from '../../lib/supabase'
+import { useAuth } from '../../components/Providers'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Button } from '../../components/ui/button'
 import { motion } from 'framer-motion'
@@ -76,7 +75,6 @@ export default function DashboardPage() {
   })
   const [recentCourses, setRecentCourses] = useState<RecentCourse[]>([])
   const [featuredCourses, setFeaturedCourses] = useState<FeaturedCourse[]>([])
-  const supabase = createSupabaseClient()
 
   useEffect(() => {
     if (!loading && !user) {
@@ -85,62 +83,8 @@ export default function DashboardPage() {
   }, [user, loading, router])
 
   const loadDashboardData = useCallback(async () => {
-    try {
-      if (!supabase) return
-
-      // Load user stats
-      const { data: progressData } = await supabase
-        .from('course_progress')
-        .select('status')
-        .eq('user_id', user!.id)
-
-      const { data: certificatesData } = await supabase
-        .from('certificates')
-        .select('id')
-        .eq('user_id', user!.id)
-
-      const completed = progressData?.filter(p => p.status === 'completed').length || 0
-      const inProgress = progressData?.filter(p => p.status === 'in_progress').length || 0
-
-      setStats({
-        totalPoints: profile?.total_points || 0,
-        currentStreak: profile?.current_streak || 0,
-        coursesCompleted: completed,
-        coursesInProgress: inProgress,
-        certificatesEarned: certificatesData?.length || 0,
-        totalWatchTime: 0 // Calculate from video progress
-      })
-
-      // Load recent courses
-      const { data: recentData } = await supabase
-        .from('course_progress')
-        .select(`
-          *,
-          courses (
-            id,
-            title,
-            thumbnail_url,
-            tags
-          )
-        `)
-        .eq('user_id', user!.id)
-        .order('updated_at', { ascending: false })
-        .limit(3)
-
-      setRecentCourses(recentData || [])
-
-      // Load featured courses
-      const { data: featuredData } = await supabase
-        .from('courses')
-        .select('*')
-        .eq('is_featured', true)
-        .limit(4)
-
-      setFeaturedCourses(featuredData || [])
-    } catch (error) {
-      console.error('Error loading dashboard data:', error)
-    }
-  }, [user, profile, supabase])
+    // Supabase has been removed. Dashboard data will load from Firebase later.
+  }, [])
 
   useEffect(() => {
     if (user) {
@@ -208,7 +152,7 @@ export default function DashboardPage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Welcome back, {profile?.display_name || profile?.full_name || 'Learner'}!</h1>
+              <h1 className="text-3xl font-bold">Welcome back, {profile?.displayName || 'Learner'}!</h1>
               <p className="text-muted-foreground mt-1">Continue your learning journey</p>
             </div>
             <Button onClick={() => router.push('/course/create')}>

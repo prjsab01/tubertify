@@ -81,6 +81,15 @@ export type UserProgress = {
   lastAccessedAt?: any;
 };
 
+export type UserProfile = {
+  email: string;
+  displayName: string;
+  full_name?: string;
+  photoURL: string;
+  role: string;
+  createdAt: string;
+};
+
 export type Achievement = {
   id: string;
   name: string;

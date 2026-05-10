@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useAuth } from '../../../components/providers'
+import { useAuth } from '../../../components/Providers'
 import { CourseCreator } from '../../../components/course-creator'
 import { useRouter } from 'next/navigation'
 import { LoadingSpinner } from '../../../components/loading'

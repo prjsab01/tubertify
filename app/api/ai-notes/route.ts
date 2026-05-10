@@ -42,10 +42,7 @@ export async function POST(request: NextRequest) {
 
 Format as JSON with fields: summary, keyPoints, concepts`;
 
-    const result = await askGemini({
-      question: prompt,
-      context,
-    });
+    const result = await askGemini({ question: prompt, context }, process.env.GEMINI_API_KEY_1!);
 
     // Parse the AI response
     let parsedNotes = {

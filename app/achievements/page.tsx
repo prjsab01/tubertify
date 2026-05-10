@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '../../components/providers'
-import { createSupabaseClient } from '../../lib/supabase'
+import { useAuth } from '../../components/Providers'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { motion } from 'framer-motion'
 import { LoadingSpinner } from '../../components/loading'
@@ -39,7 +39,6 @@ export default function AchievementsPage() {
     totalWatchTime: 0
   })
   const [loading, setLoading] = useState(true)
-  const supabase = createSupabaseClient()
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -55,71 +54,13 @@ export default function AchievementsPage() {
   }, [user])
 
   const loadAchievements = async () => {
-    try {
-      if (!supabase) return
-
-      // Get user achievements
-      const { data: userAchievements, error } = await supabase
-        .from('user_achievements')
-        .select(`
-          id,
-          unlocked_at,
-          achievements (
-            id,
-            title,
-            description,
-            icon,
-            points,
-            category
-          )
-        `)
-        .eq('user_id', user!.id)
-
-      if (error) throw error
-
-      // Transform data
-      const achievementsData = (userAchievements?.map(ua => ({
-        ...ua.achievements,
-        unlocked_at: ua.unlocked_at
-      })) || []) as unknown as Achievement[]
-
-      setAchievements(achievementsData)
-    } catch (error) {
-      console.error('Error loading achievements:', error)
-    }
+    // Supabase has been removed; achievements are not loaded here yet.
+    setAchievements([])
   }
 
   const loadStats = async () => {
-    try {
-      if (!supabase) return
-
-      // Get user profile stats
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('total_points, current_streak, longest_streak')
-        .eq('id', user!.id)
-        .single()
-
-      // Get course completion stats
-      const { data: progressData } = await supabase
-        .from('course_progress')
-        .select('status')
-        .eq('user_id', user!.id)
-
-      const completed = progressData?.filter(p => p.status === 'completed').length || 0
-
-      setStats({
-        totalPoints: profile?.total_points || 0,
-        currentStreak: profile?.current_streak || 0,
-        longestStreak: profile?.longest_streak || 0,
-        coursesCompleted: completed,
-        totalWatchTime: 0 // Could be calculated from watch history
-      })
-    } catch (error) {
-      console.error('Error loading stats:', error)
-    } finally {
-      setLoading(false)
-    }
+    // Supabase has been removed; profile stats are not loaded here yet.
+    setLoading(false)
   }
 
   const getIcon = (iconName: string) => {

@@ -1,12 +1,14 @@
 import admin from "firebase-admin";
+import fs from "fs";
+import path from "path";
 
-const firebaseAdminSdkKey = process.env.FIREBASE_ADMIN_SDK_KEY;
+const firebaseAdminSdkKeyPath = process.env.FIREBASE_ADMIN_SDK_KEY;
 
-if (!firebaseAdminSdkKey) {
+if (!firebaseAdminSdkKeyPath) {
   throw new Error("Missing FIREBASE_ADMIN_SDK_KEY in environment.");
 }
 
-const serviceAccount = JSON.parse(firebaseAdminSdkKey);
+const serviceAccount = JSON.parse(fs.readFileSync(path.resolve(firebaseAdminSdkKeyPath), "utf8"));
 
 if (!admin.apps.length) {
   admin.initializeApp({

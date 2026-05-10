@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await askGemini({ question, context: context || "" });
+    const result = await askGemini({ question, context: context || "" }, process.env.GEMINI_API_KEY_2!);
     return NextResponse.json({ answer: result.answer });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Assistant request failed." }, { status: 500 });

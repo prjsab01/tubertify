@@ -1,14 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '../../components/providers'
-import { createSupabaseClient } from '../../lib/supabase'
+import { useAuth } from '../../components/Providers'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 import { Button } from '../../components/ui/button'
 import { motion } from 'framer-motion'
 import { LoadingSpinner, CardSkeleton } from '../../components/loading'
 import { BookOpen, Play, Clock, Star, Award } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 interface Course {
   id: string
@@ -30,7 +30,6 @@ export default function LibraryPage() {
   const router = useRouter()
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
-  const supabase = createSupabaseClient()
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -45,36 +44,9 @@ export default function LibraryPage() {
   }, [user])
 
   const loadLibrary = async () => {
-    try {
-      if (!supabase) return
-
-      // Get all courses with user's progress
-      const { data: coursesData, error } = await supabase
-        .from('courses')
-        .select(`
-          id,
-          title,
-          description,
-          thumbnail_url,
-          tags,
-          difficulty_level,
-          total_modules,
-          created_at,
-          course_progress!inner(
-            status,
-            progress_percentage
-          )
-        `)
-        .eq('course_progress.user_id', user!.id)
-
-      if (error) throw error
-
-      setCourses(coursesData || [])
-    } catch (error) {
-      console.error('Error loading library:', error)
-    } finally {
-      setLoading(false)
-    }
+    // Supabase has been removed; learnings are not loaded here yet.
+    setCourses([])
+    setLoading(false)
   }
 
   const getDifficultyColor = (level: string) => {
@@ -152,10 +124,11 @@ export default function LibraryPage() {
                   <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer">
                     <div className="aspect-video relative overflow-hidden rounded-t-lg">
                       {course.thumbnail_url ? (
-                        <img
+                        <Image
                           src={course.thumbnail_url}
                           alt={course.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <div className="w-full h-full bg-muted flex items-center justify-center">

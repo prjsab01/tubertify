@@ -36,12 +36,12 @@ export async function POST(request: NextRequest) {
     const courseRef = await adminDb.collection("courses").add(newCourse);
 
     const modulesCollectionRef = courseRef.collection("modules");
-    const module: Omit<Module, "id"> = {
+    const playlistModule: Omit<Module, "id"> = {
       title: "Module 1",
       order: 1,
       videos: videos,
     };
-    await modulesCollectionRef.add(module);
+    await modulesCollectionRef.add(playlistModule);
 
     return NextResponse.json({ courseId: courseRef.id });
   } catch (error: any) {
