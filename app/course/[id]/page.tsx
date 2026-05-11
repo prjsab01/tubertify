@@ -1,7 +1,5 @@
 "use client";
 
-export const runtime = 'nodejs';
-
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { Course, Module, VideoMeta, AINotes } from "../../../lib/types";

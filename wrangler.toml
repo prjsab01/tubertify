@@ -2,11 +2,5 @@ name = "tubertify"
 compatibility_date = "2026-05-05"
 compatibility_flags = ["nodejs_compat"]
 
-# Cloudflare Pages configuration
-# Build command and output dir are configured in Pages UI
-# Note: Environment variables must be set in the Pages project settings
-
-# Build caching configuration
-[build.upload]
-format = "service-worker"
-
+# Pages configuration (no build config - Pages will auto-detect)
+# Cloudflare will use default Next.js build detection

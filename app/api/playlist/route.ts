@@ -1,5 +1,3 @@
-export const runtime = 'nodejs';
-
 import { NextRequest, NextResponse } from "next/server";
 import { fetchPlaylistVideos, parsePlaylistId } from "../../../lib/youtube";
 import { adminDb } from "../../../lib/firebaseAdmin";
