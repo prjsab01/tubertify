@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Course, Module, VideoMeta } from "../lib/types";
 import { useAuth } from "../components/Providers";
 import { loginWithEmail, loginWithGoogle, logout, registerWithEmail } from "../lib/auth";
@@ -95,14 +95,23 @@ export default function HomePage() {
     }
     setLoading(true);
     setMessage(null);
-
     try {
       const response = await fetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: assistantQuestion, context: buildContext() }),
-
-  const handleAuthSubmit = async () => {
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error || "Assistant request failed.");
+      }
+      setAssistantAnswer(data.answer);
+    } catch (error: any) {
+      setMessage(error?.message || "Unable to reach AI assistant.");
+    } finally {
+      setLoading(false);
+    }
+  };
     setMessage(null);
     setLoading(true);
     try {
