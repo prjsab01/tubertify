@@ -2,13 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { Course, Module, VideoMeta } from "../lib/types";
+import type { Course, Module } from "../lib/types";
 import { useAuth } from "../components/Providers";
 import { loginWithEmail, loginWithGoogle, logout, registerWithEmail } from "../lib/auth";
 import { loadUserCourses } from "../lib/firestore";
 import { createCourseWithModules } from "../lib/firestoreClient";
-
-type ModuleItem = Module;
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
@@ -24,58 +22,30 @@ export default function HomePage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) {
-      setSavedCourses([]);
-      return;
-    }
-
-    const currentUser = user;
-    async function loadCourses() {
-      try {
-        const userId = currentUser.uid;
-        const courses = await loadUserCourses(userId);
-        setSavedCourses(courses);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    loadCourses();
+    if (!user) { setSavedCourses([]); return; }
+    const uid = user.uid;
+    loadUserCourses(uid).then(setSavedCourses).catch(console.error);
   }, [user]);
 
   const importPlaylist = async () => {
     setMessage(null);
-    if (!playlistUrl.trim()) {
-      setMessage("Paste a valid YouTube playlist URL.");
-      return;
-    }
-    if (!user) {
-      setMessage("Please sign in to create a course.");
-      return;
-    }
-
+    if (!playlistUrl.trim()) { setMessage("Paste a valid YouTube playlist URL."); return; }
+    if (!user) { setMessage("Please sign in to create a course."); return; }
     setLoading(true);
     try {
-      // Fetch videos server-side (needs YouTube API key)
-      const response = await fetch("/api/playlist", {
+      const res = await fetch("/api/playlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ playlistUrl }),
       });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.error || "Failed to fetch playlist.");
-      }
-
-      // Save course to Firestore directly from client (auth rules apply)
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to fetch playlist.");
       const courseId = await createCourseWithModules(
         { title: courseTitle, ownerId: user.uid, modules: [], isPublished: false },
         [{ title: "Module 1", order: 1, videos: data.videos }]
       );
-
       setMessage(`Successfully imported course with ID: ${courseId}`);
-      const courses = await loadUserCourses(user.uid);
-      setSavedCourses(courses);
+      setSavedCourses(await loadUserCourses(user.uid));
     } catch (error: any) {
       setMessage(error?.message || "Import failed.");
     } finally {
@@ -83,28 +53,18 @@ export default function HomePage() {
     }
   };
 
-  const buildContext = () => {
-    // This will be improved later when we have a course view page
-    return courseTitle;
-  };
-
   const askAssistant = async () => {
-    if (!assistantQuestion.trim()) {
-      setMessage("Enter a question for the AI assistant.");
-      return;
-    }
+    if (!assistantQuestion.trim()) { setMessage("Enter a question for the AI assistant."); return; }
     setLoading(true);
     setMessage(null);
     try {
-      const response = await fetch("/api/assistant", {
+      const res = await fetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: assistantQuestion, context: buildContext() }),
+        body: JSON.stringify({ question: assistantQuestion, context: courseTitle }),
       });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.error || "Assistant request failed.");
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Assistant request failed.");
       setAssistantAnswer(data.answer);
     } catch (error: any) {
       setMessage(error?.message || "Unable to reach AI assistant.");
@@ -112,6 +72,8 @@ export default function HomePage() {
       setLoading(false);
     }
   };
+
+  const handleAuthSubmit = async () => {
     setMessage(null);
     setLoading(true);
     try {
@@ -161,14 +123,12 @@ export default function HomePage() {
           <h1>AI Course Builder</h1>
           <p>Create module-based courses from YouTube playlists and use Firebase auth + Firestore.</p>
         </div>
-        {user ? (
+        {user && (
           <div>
             <p>Signed in as {user.email}</p>
-            <button type="button" onClick={handleSignOut} disabled={loading}>
-              Sign out
-            </button>
+            <button type="button" onClick={handleSignOut} disabled={loading}>Sign out</button>
           </div>
-        ) : null}
+        )}
       </div>
 
       {!user ? (
@@ -220,11 +180,7 @@ export default function HomePage() {
               <h2 className="section-title">Import YouTube Playlist</h2>
               <div className="form-group">
                 <label htmlFor="courseTitle">Course Title</label>
-                <input
-                  id="courseTitle"
-                  value={courseTitle}
-                  onChange={(e) => setCourseTitle(e.target.value)}
-                />
+                <input id="courseTitle" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} />
               </div>
               <div className="form-group">
                 <label htmlFor="playlistUrl">Playlist URL</label>
@@ -257,7 +213,6 @@ export default function HomePage() {
               <button type="button" onClick={askAssistant} disabled={loading}>
                 {loading ? "Thinking..." : "Ask AI Assistant"}
               </button>
-
               {assistantAnswer && (
                 <div className="note-box" style={{ marginTop: "1rem" }}>
                   <strong>AI Answer</strong>
