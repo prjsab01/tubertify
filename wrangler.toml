@@ -1,7 +1,7 @@
 name = "tubertify"
 compatibility_date = "2026-05-05"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".open-next/assets"
+pages_build_output_dir = ".open-next"
 
 [vars]
 NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyB7A2JcQZSZPdWepnfgj7_wlbRNoHwS9us"
