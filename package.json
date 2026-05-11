@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": ".\\node_modules\\.bin\\open-next build --build-command \"npm run build:local\"",
-    "build:local": "next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
