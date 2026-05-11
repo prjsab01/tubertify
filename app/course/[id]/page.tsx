@@ -1,5 +1,9 @@
 "use client";
 
+export async function generateStaticParams() {
+  return [];
+}
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { Course, Module, VideoMeta, AINotes } from "../../../lib/types";
