@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createUserProfile } from "../../../lib/firestoreClient";
 
+export const runtime = 'edge';
+
 export async function POST(request: NextRequest) {
   try {
     const { uid, email, displayName, photoURL } = await request.json();

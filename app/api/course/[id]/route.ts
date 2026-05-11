@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCourseWithModules } from "../../../../lib/firestoreClient";
 
+export const runtime = 'edge';
+
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const courseId = params.id;

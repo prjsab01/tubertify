@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { askGemini } from "../../../lib/gemini";
 import { checkAndIncrementUsage } from "../../../lib/firestore-tubertify";
 
+export const runtime = 'edge';
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();

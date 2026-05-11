@@ -6,6 +6,8 @@ import {
   getAINotesForVideo,
 } from "../../../lib/firestore-tubertify";
 
+export const runtime = 'edge';
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();

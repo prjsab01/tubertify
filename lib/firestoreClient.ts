@@ -58,8 +58,8 @@ export async function createCourseWithModules(
     createdAt: new Date().toISOString(),
   });
   const modulesRef = collection(firestore, "courses", courseDocRef.id, "modules");
-  for (const module of modules) {
-    await addDoc(modulesRef, module);
+  for (const mod of modules) {
+    await addDoc(modulesRef, mod);
   }
   return courseDocRef.id;
 }

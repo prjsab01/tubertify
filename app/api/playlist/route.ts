@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchPlaylistVideos, parsePlaylistId } from "../../../lib/youtube";
 
+export const runtime = 'edge';
+
 export async function POST(request: NextRequest) {
   try {
     const { playlistUrl } = await request.json();

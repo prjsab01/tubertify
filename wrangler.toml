@@ -1,6 +1,4 @@
 name = "tubertify"
 compatibility_date = "2026-05-05"
 compatibility_flags = ["nodejs_compat"]
-
-# Pages configuration (no build config - Pages will auto-detect)
-# Cloudflare will use default Next.js build detection
+pages_build_output_dir = ".vercel/output/static"
