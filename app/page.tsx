@@ -6,6 +6,7 @@ import type { Course, Module, VideoMeta } from "../lib/types";
 import { useAuth } from "../components/Providers";
 import { loginWithEmail, loginWithGoogle, logout, registerWithEmail } from "../lib/auth";
 import { loadUserCourses } from "../lib/firestore";
+import { createCourseWithModules } from "../lib/firestoreClient";
 
 type ModuleItem = Module;
 
@@ -55,17 +56,24 @@ export default function HomePage() {
 
     setLoading(true);
     try {
+      // Fetch videos server-side (needs YouTube API key)
       const response = await fetch("/api/playlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playlistUrl, title: courseTitle, ownerId: user.uid }),
+        body: JSON.stringify({ playlistUrl }),
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data?.error || "Failed to import playlist.");
+        throw new Error(data?.error || "Failed to fetch playlist.");
       }
-      setMessage(`Successfully imported course with ID: ${data.courseId}`);
-      // Reload courses
+
+      // Save course to Firestore directly from client (auth rules apply)
+      const courseId = await createCourseWithModules(
+        { title: courseTitle, ownerId: user.uid, modules: [], isPublished: false },
+        [{ title: "Module 1", order: 1, videos: data.videos }]
+      );
+
+      setMessage(`Successfully imported course with ID: ${courseId}`);
       const courses = await loadUserCourses(user.uid);
       setSavedCourses(courses);
     } catch (error: any) {
