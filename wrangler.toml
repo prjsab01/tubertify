@@ -1,8 +1,9 @@
 name = "tubertify"
 type = "javascript"
-account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+account_id = "71f7a589d4bcc8aba1f9168d6316b0fc"
 compatibility_date = "2026-05-05"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".next"
 
 # Build configuration
 [build]
@@ -13,14 +14,14 @@ watch_paths = ["app/**/*.ts", "app/**/*.tsx", "lib/**/*.ts", "components/**/*.ts
 # Environment variables for development
 [env.production]
 name = "tubertify-prod"
-account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+account_id = "71f7a589d4bcc8aba1f9168d6316b0fc"
 
 [env.staging]
 name = "tubertify-staging"
-account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+account_id = "71f7a589d4bcc8aba1f9168d6316b0fc"
 
 # Cloudflare Pages configuration
-# Note: When deploying via Cloudflare Pages UI, these environment variables 
+# Note: When deploying via Cloudflare Pages UI, these environment variables
 # must be set in the Pages project settings for the appropriate environment
 
 # Build caching configuration
