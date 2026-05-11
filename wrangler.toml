@@ -1,9 +1,10 @@
 name = "tubertify"
 compatibility_date = "2026-05-05"
-pages_build_output_dir = "out"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
 
 [pages_build_config]
-build_command = "npm run build"
+build_command = "npm run build:cf"
 
 [vars]
 NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyB7A2JcQZSZPdWepnfgj7_wlbRNoHwS9us"
