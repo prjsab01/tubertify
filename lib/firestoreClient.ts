@@ -41,8 +41,8 @@ export async function getCourseWithModules(
   const q = query(modulesRef, orderBy("order", "asc"));
   const modulesSnapshot = await getDocs(q);
   course.modules = modulesSnapshot.docs.map((d) => ({
-    id: d.id,
     ...(d.data() as Module),
+    id: d.id,
   }));
   return course;
 }
