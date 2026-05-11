@@ -2,6 +2,9 @@ name = "tubertify"
 compatibility_date = "2026-05-05"
 pages_build_output_dir = "out"
 
+[pages_build_config]
+build_command = "npm run build"
+
 [vars]
 NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyB7A2JcQZSZPdWepnfgj7_wlbRNoHwS9us"
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "tubertify.firebaseapp.com"
