@@ -83,7 +83,7 @@ export default function DashboardPage() {
   }, [user, loading, router])
 
   const loadDashboardData = useCallback(async () => {
-    // Supabase has been removed. Dashboard data will load from Firebase later.
+    // TODO: load dashboard data from Firebase when ready.
   }, [])
 
   useEffect(() => {

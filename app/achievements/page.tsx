@@ -54,12 +54,12 @@ export default function AchievementsPage() {
   }, [user])
 
   const loadAchievements = async () => {
-    // Supabase has been removed; achievements are not loaded here yet.
+    // TODO: load achievements from Firebase when ready.
     setAchievements([])
   }
 
   const loadStats = async () => {
-    // Supabase has been removed; profile stats are not loaded here yet.
+    // TODO: load profile stats from Firebase when ready.
     setLoading(false)
   }
 

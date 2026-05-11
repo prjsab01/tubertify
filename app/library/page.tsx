@@ -44,7 +44,7 @@ export default function LibraryPage() {
   }, [user])
 
   const loadLibrary = async () => {
-    // Supabase has been removed; learnings are not loaded here yet.
+    // TODO: load library courses from Firebase when ready.
     setCourses([])
     setLoading(false)
   }

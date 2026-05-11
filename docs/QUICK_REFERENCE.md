@@ -20,13 +20,13 @@ A concise summary of Tubertify's architecture and integration points for quick l
 
 ```
 Frontend          → Next.js 14 (App Router) + TypeScript + Tailwind CSS + ShadCN/UI
-Backend APIs      → Next.js API Routes (Edge Runtime) + TypeScript
-Database          → Supabase PostgreSQL + RLS
-Authentication    → Supabase Auth + Google OAuth
+Backend APIs      → Next.js API Routes + TypeScript
+Database          → Firebase Firestore
+Authentication    → Firebase Authentication
 AI Integration    → Google Gemini API (3 keys)
 External APIs     → YouTube Data API v3
 Hosting           → Cloudflare Pages
-Real-time         → Firestore Listeners (after migration)
+Real-time         → Firestore listeners
 ```
 
 ---
@@ -48,22 +48,23 @@ Real-time         → Firestore Listeners (after migration)
 
 ### Public (Exposed to Client)
 ```env
-NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY
-NEXT_PUBLIC_FIREBASE_API_KEY (after migration)
+NEXT_PUBLIC_FIREBASE_API_KEY
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
 NEXT_PUBLIC_FIREBASE_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 ```
 
 ### Secret (Server-side Only)
 ```env
-SUPABASE_SERVICE_ROLE_KEY
-FIREBASE_ADMIN_SDK_KEY (JSON)
+FIREBASE_ADMIN_SDK_KEY
 YOUTUBE_API_KEY
-GEMINI_API_KEY_1 (Summaries)
-GEMINI_API_KEY_2 (Study Materials)
-GEMINI_API_KEY_3 (Chat)
-ADMIN_EMAIL_HASH (SHA-256)
+GEMINI_API_KEY_1
+GEMINI_API_KEY_2
+GEMINI_API_KEY_3
+ADMIN_EMAIL_HASH
 ```
 
 ---
@@ -97,7 +98,7 @@ ADMIN_EMAIL_HASH (SHA-256)
 - **Input**: YouTube playlist or single video URL
 - **Rate Limit**: 1 course per 24 hours per user
 - **Output**: Course with auto-created modules
-- **Process**: YouTube API → Parse metadata → Supabase INSERT
+- **Process**: YouTube API → Parse metadata → Firebase Firestore write
 
 ### 2. AI Summaries (2 types)
 - **Video Summary**: Summary of single video transcript
@@ -227,11 +228,11 @@ Test (tests)
 
 ---
 
-## 🔒 Security & RLS
+## 🔒 Security & Rules
 
 ### Authentication
 - OAuth 2.0 via Google
-- Session managed by Supabase Auth
+- Session managed by Firebase Authentication
 - User context available in API routes
 
 ### Authorization
@@ -239,24 +240,18 @@ Test (tests)
 - **Private**: User progress, test attempts, profile
 - **Admin-only**: User management, course promotion, analytics
 
-### Row Level Security (RLS)
-All tables protected. Examples:
-```sql
--- Users can only access own data
-WHERE user_id = auth.uid()
-
--- Admins can access all data
-WHERE is_admin()
-
--- Courses readable by all, writable by creator/admin
-SELECT: true
-UPDATE: created_by = auth.uid() OR is_admin()
+### Firestore Security Rules
+Use Firestore rules to protect user data and enforce access boundaries.
+```js
+match /users/{userId} {
+  allow read, update: if request.auth.uid == userId;
+}
 ```
 
 ### Admin Detection
-```sql
--- Email hash comparison
-user_hash = SELECT(admin_hash FROM app_config)
+Email hash comparison is still used for admin lookup.
+```js
+// Compare hashed email with stored admin hash
 ```
 
 ---
@@ -265,19 +260,18 @@ user_hash = SELECT(admin_hash FROM app_config)
 
 | File | Purpose |
 |------|---------|
-| `lib/supabase.ts` | Supabase client initialization + TypeScript types |
-| `lib/gemini.ts` | Gemini API clients (3 instances) + prompt templates |
-| `lib/utils.ts` | Helper functions (email hash, YouTube ID extraction) |
-| `components/providers.tsx` | Auth context provider + profile loading |
+| `lib/firebaseAdmin.ts` | Firebase Admin initialization for server-side Firestore and Auth |
+| `lib/firestore-tubertify.ts` | Firestore operations for AI notes, usage, and course data |
+| `lib/gemini.ts` | Gemini API clients + prompt templates |
+| `lib/youtube.ts` | YouTube playlist parsing and video metadata fetch |
+| `components/Providers.tsx` | Auth context provider + profile loading |
 | `components/navigation.tsx` | Top nav with auth-aware menu |
-| `app/auth/callback/route.ts` | OAuth callback handler |
-| `app/api/courses/create/route.ts` | Course import from YouTube |
-| `app/api/ai/summary/route.ts` | Summary generation (video/course) |
-| `app/api/ai/notes/route.ts` | Study notes generation |
-| `app/api/ai/mcq/route.ts` | MCQ test generation |
-| `app/api/ai/chat/route.ts` | TubiBot chat endpoint |
-| `supabase/schema.sql` | Database schema (20+ tables) |
-| `supabase/rls-policies.sql` | Row Level Security policies |
+| `app/api/playlist/route.ts` | Playlist import handler |
+| `app/api/ai-notes/route.ts` | AI notes generation endpoint |
+| `app/api/assistant/route.ts` | TubiBot chat endpoint |
+| `app/api/user/route.ts` | User profile creation and updates |
+| `app/course/[id]/page.tsx` | Course detail page |
+| `app/dashboard/page.tsx` | Dashboard page |
 
 ---
 
@@ -287,34 +281,24 @@ user_hash = SELECT(admin_hash FROM app_config)
 |-----------|---------|
 | Frontend | Cloudflare Pages |
 | Backend APIs | Cloudflare Functions |
-| Database | Supabase Cloud (PostgreSQL) |
-| Storage | Supabase Storage (for certificates, assets) |
+| Database | Firebase Firestore |
+| Storage | Firebase Storage / Firestore |
 | CDN | Cloudflare Global Edge |
 
 ### Build Process
 ```bash
-npm run build
-# → Next.js builds to .next directory
-# → Cloudflare Pages detects changes
-# → Deploys to edge workers globally
+npx @cloudflare/next-on-pages@1
+# → Next.js builds and exports to .vercel/output/static
+# → Cloudflare Pages deploys the generated output
 ```
 
 ---
 
-## 🔄 Supabase → Firebase Migration Map
+## 🔄 Migration Notes
 
-| Supabase Feature | Firebase Equivalent |
-|------------------|-------------------|
-| PostgreSQL | Firestore (NoSQL) |
-| Schema validation | Document validation rules |
-| RLS policies | Security Rules (JSON) |
-| Supabase Auth | Firebase Authentication |
-| Service role key | Firebase Admin SDK |
-| Tables | Collections |
-| Rows | Documents |
-| Joins | Denormalization + subcollections |
-| Transactions | Firestore Transactions |
-| Notify/pubsub | Cloud Functions + Pub/Sub |
+This project has already been migrated from Supabase to Firebase/Firestore. The current implementation uses Firebase Authentication and Firestore for data storage.
+
+For legacy migration details, see `docs/FIREBASE_MIGRATION_GUIDE.md`.
 
 ---
 
@@ -374,7 +358,7 @@ Tracked but not fully detailed in README:
 
 - **Indexes**: On email, featured, user_id, date combinations
 - **Caching**: Summaries generated once per entity
-- **RLS**: Prevents unauthorized queries early
+- **Firestore Security Rules**: Prevents unauthorized queries early
 - **Cloudflare**: Global CDN + edge caching
 - **Next.js**: Code splitting + lazy loading
 - **PWA**: Offline support + service worker
@@ -385,11 +369,11 @@ Tracked but not fully detailed in README:
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Auth not working | OAuth config incomplete | Check Supabase/Firebase redirect URIs |
+| Auth not working | OAuth config incomplete | Check Firebase redirect URIs |
 | Summaries not generating | API key invalid | Verify Gemini keys in env |
 | Rate limit false positives | Time zone mismatch | Use UTC for date comparisons |
-| RLS errors | User ID mismatch | Verify request includes correct userId |
-| Slow queries | Missing indexes | Check schema.sql indexes |
+| Security rule errors | User ID mismatch | Verify request includes correct userId |
+| Slow queries | Missing indexes | Check Firestore index configuration |
 
 ---
 
@@ -420,7 +404,6 @@ Tracked but not fully detailed in README:
 ## 🔗 Important Links
 
 - **Repository**: https://github.com/prjsab01/tubertify
-- **Supabase Docs**: https://supabase.io/docs
 - **Firebase Docs**: https://firebase.google.com/docs
 - **Next.js 14 Docs**: https://nextjs.org/docs
 - **YouTube API**: https://developers.google.com/youtube/v3/docs
@@ -434,7 +417,7 @@ Tracked but not fully detailed in README:
 Before deployment/migration, verify:
 
 - [ ] All 20 database tables created
-- [ ] RLS policies applied to all tables
+- [ ] Firestore security rules validated
 - [ ] OAuth configured (Google)
 - [ ] API keys set (YouTube, Gemini x3)
 - [ ] Admin email hash generated and stored

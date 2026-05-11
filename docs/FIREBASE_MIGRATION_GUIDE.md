@@ -1,5 +1,7 @@
 # Firebase Migration Guide for Tubertify
 
+> Legacy migration notes only. The current Tubertify implementation already uses Firebase and Gemini; this document describes the old Supabase-to-Firebase migration path.
+
 This guide explains how to migrate Tubertify from Supabase to Firebase, mapping each feature to its Firebase equivalent.
 
 ---

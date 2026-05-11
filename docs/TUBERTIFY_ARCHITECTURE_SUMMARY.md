@@ -1,4 +1,8 @@
-# Tubertify - Complete Architecture & Supabase Integration Analysis
+# ⚠️ LEGACY DOCUMENTATION - SUPABASE MIGRATION ANALYSIS
+
+> **IMPORTANT**: This document contains historical information about the Supabase migration. The project has been fully migrated to Firebase Firestore. For current architecture details, see the main README.md and current codebase.
+
+# Tubertify - Complete Architecture & Legacy Supabase Migration Analysis
 
 ## Executive Summary
 
@@ -48,10 +52,10 @@ Convert YouTube videos and playlists into structured, gamified learning courses 
 - **Request/Response**: JSON
 
 ### Database & Authentication
-- **Database**: Supabase (PostgreSQL)
-- **Auth Provider**: Supabase Auth + Google OAuth
-- **Security**: Row Level Security (RLS) on all tables
-- **Service Layer**: Supabase JS client + Service Role Key
+- **Database**: Firebase Firestore
+- **Auth Provider**: Firebase Authentication
+- **Security**: Firestore Security Rules
+- **Service Layer**: Firebase Admin SDK and Firestore client
 
 ### AI & External APIs
 - **AI Model**: Google Gemini API (gemini-pro)
@@ -65,7 +69,7 @@ Convert YouTube videos and playlists into structured, gamified learning courses 
 - **Hosting**: Cloudflare Pages
 - **Repository**: GitHub
 - **Build**: Next.js build system
-- **Database Host**: Supabase Cloud
+- **Database Host**: Firebase Firestore
 
 ---
 
@@ -572,71 +576,11 @@ interface AuthContextType {
 
 ---
 
-## 8. Supabase Integration Points
+## 8. Legacy Supabase Notes
 
-### 8.1 Client Initialization
+This section is retained only for historical reference. The current Tubertify app is implemented with Firebase Authentication and Firestore, not Supabase.
 
-**File**: `lib/supabase.ts`
-```typescript
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-export const createSupabaseClient = () => {
-  if (typeof window === 'undefined') return null
-  return createClient(supabaseUrl, supabaseAnonKey)
-}
-```
-
-**Environment Variables**:
-- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Anonymous key for client
-- `SUPABASE_SERVICE_ROLE_KEY` - Service role key for admin operations
-
-### 8.2 Client vs. Server Usage
-
-#### Client-Side (Frontend)
-- Anon key: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- User auth state
-- Reading own data
-- RLS prevents unauthorized access
-
-#### Server-Side (API Routes)
-- Service role key: `SUPABASE_SERVICE_ROLE_KEY`
-- Bypasses RLS (must validate permissions manually)
-- Creating courses, tracking usage, awarding points
-- Admin operations
-
-### 8.3 Authentication in API Routes
-
-```typescript
-// Server-side client with service role
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
-// After user authenticates, include user_id in requests
-// Validate that user_id matches auth user (prevent user A modifying user B data)
-const { userId } = await request.json()
-const authUser = getAuthUser() // From session/JWT
-if (userId !== authUser.id) throw Error('Unauthorized')
-```
-
-### 8.4 Key Supabase Methods Used
-
-| Method | Usage |
-|--------|-------|
-| `.auth.getSession()` | Get current user session |
-| `.auth.onAuthStateChange()` | Listen for auth changes |
-| `.auth.signInWithOAuth()` | Trigger OAuth login |
-| `.auth.signOut()` | Logout user |
-| `.auth.exchangeCodeForSession()` | OAuth callback |
-| `.from('table').select()` | Query (SELECT) |
-| `.from('table').insert()` | Create (INSERT) |
-| `.from('table').update()` | Update (UPDATE) |
-| `.from('table').delete()` | Delete (DELETE) |
-| `.from('table').upsert()` | Insert or update |
-| `.from('table').single()` | Return single row |
+For migration history and old Supabase integration details, see `docs/FIREBASE_MIGRATION_GUIDE.md`.
 
 ---
 
