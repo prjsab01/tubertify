@@ -1,0 +1,13 @@
+name = "tubertify"
+compatibility_date = "2026-05-05"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".open-next/assets"
+
+[vars]
+NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyB7A2JcQZSZPdWepnfgj7_wlbRNoHwS9us"
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "tubertify.firebaseapp.com"
+NEXT_PUBLIC_FIREBASE_PROJECT_ID = "tubertify"
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "tubertify.firebasestorage.app"
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "708018026713"
+NEXT_PUBLIC_FIREBASE_APP_ID = "1:708018026713:web:df3bfc4ab67d18369b66c8"
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID = "G-MWW2739QHL"
