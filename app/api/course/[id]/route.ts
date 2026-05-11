@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "../../../../lib/firebaseAdmin";
 import type { Course, Module } from "../../../../lib/types";

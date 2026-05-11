@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from "next/server";
 import { askGemini } from "../../../lib/gemini";
 import { checkAndIncrementUsage } from "../../../lib/firestore-tubertify";
