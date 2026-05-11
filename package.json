@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx open-next@latest build",
+    "build": "next build",
+    "build:firebase": "next build && cp -r .next functions/.next",
+    "deploy:firebase": "npm run build:firebase && npx firebase deploy --only hosting,functions",
     "start": "next start",
     "lint": "next lint"
   },
@@ -29,11 +31,10 @@
     "autoprefixer": "^10.5.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.35",
-    "open-next": "^3.1.3",
     "postcss": "^8.5.14",
     "tailwindcss": "^3.4.19",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.6.3",
-    "wrangler": "^4.88.0"
+    "firebase-tools": "^12.0.0"
   }
 }
