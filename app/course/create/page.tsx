@@ -1,7 +1,5 @@
 'use client'
 
-export const runtime = 'edge';
-
 import { useEffect } from 'react'
 import { useAuth } from '../../../components/Providers'
 import { CourseCreator } from '../../../components/course-creator'

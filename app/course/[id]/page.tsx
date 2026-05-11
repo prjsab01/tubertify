@@ -1,11 +1,11 @@
 "use client";
 
-export const runtime = 'edge';
-
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { Course, Module, VideoMeta, AINotes } from "../../../lib/types";
 import { useAuth } from "../../../components/Providers";
+import { getCourseWithModules } from "../../../lib/firestoreClient";
+import { saveAINotes, getAINotesForVideo, checkAndIncrementUsage } from "../../../lib/firestore-tubertify";
 
 export default function CoursePage() {
   const { user } = useAuth();
@@ -23,12 +23,9 @@ export default function CoursePage() {
 
     async function fetchCourse() {
       try {
-        const response = await fetch(`/api/course/${courseId}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch course data.");
-        }
-        const data = await response.json();
-        setCourse(data.course);
+        const data = await getCourseWithModules(courseId);
+        if (!data) throw new Error("Course not found.");
+        setCourse(data);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -40,29 +37,29 @@ export default function CoursePage() {
   }, [courseId]);
 
   const handleGenerateNotes = async (video: VideoMeta, moduleId: string) => {
-    if (!user) {
-      alert("Please sign in to generate notes.");
-      return;
-    }
+    if (!user) { alert("Please sign in to generate notes."); return; }
     setIsGeneratingNotes(true);
     setGeneratedNotes(null);
     try {
+      // Check cache first
+      const existing = await getAINotesForVideo(courseId, moduleId, video.youtubeId);
+      if (existing) { setGeneratedNotes(existing); return; }
+
+      // Check rate limit
+      const canGenerate = await checkAndIncrementUsage(user.uid, "notes", 5);
+      if (!canGenerate) { alert("Daily limit reached for AI notes. Try again tomorrow."); return; }
+
+      // Call Cloudflare Function
       const response = await fetch("/api/ai-notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user.uid,
-          courseId,
-          moduleId,
-          videoId: video.youtubeId,
-          title: video.title,
-          transcript: video.transcript,
-        }),
+        body: JSON.stringify({ title: video.title, transcript: video.transcript }),
       });
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to generate notes.");
-      }
+      if (!response.ok) throw new Error(data.error || "Failed to generate notes.");
+
+      // Save to Firestore client-side
+      await saveAINotes({ courseId, moduleId, videoId: video.youtubeId, ...data.notes });
       setGeneratedNotes(data.notes);
     } catch (error: any) {
       alert(error.message);
@@ -76,30 +73,23 @@ export default function CoursePage() {
   const [isAskingAssistant, setIsAskingAssistant] = useState(false);
 
   const handleAskAssistant = async () => {
-    if (!user) {
-      alert("Please sign in to use the assistant.");
-      return;
-    }
-    if (!assistantQuestion.trim()) {
-      return;
-    }
+    if (!user) { alert("Please sign in to use the assistant."); return; }
+    if (!assistantQuestion.trim()) return;
     setIsAskingAssistant(true);
     setAssistantAnswer("");
     try {
+      // Check rate limit
+      const canAsk = await checkAndIncrementUsage(user.uid, "assistant", 10);
+      if (!canAsk) { alert("Daily limit reached for AI assistant. Try again tomorrow."); return; }
+
       const context = `Course: ${course?.title}${selectedVideo ? `\nVideo: ${selectedVideo.title}` : ""}`;
       const response = await fetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user.uid,
-          question: assistantQuestion,
-          context,
-        }),
+        body: JSON.stringify({ question: assistantQuestion, context }),
       });
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to ask the assistant.");
-      }
+      if (!response.ok) throw new Error(data.error || "Failed to ask the assistant.");
       setAssistantAnswer(data.answer);
     } catch (error: any) {
       alert(error.message);

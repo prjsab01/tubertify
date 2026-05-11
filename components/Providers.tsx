@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signOut as firebaseSignOut, User } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../lib/firebaseClient";
 import type { UserProfile } from "../lib/types";
 
@@ -50,20 +50,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setProfile(profileSnap.data() as UserProfile);
         } else {
           try {
-            await fetch("/api/user", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                uid: firebaseUser.uid,
-                email: firebaseUser.email,
-                displayName: firebaseUser.displayName,
-                photoURL: firebaseUser.photoURL,
-              }),
-            });
-            const newProfileSnap = await getDoc(profileRef);
-            if (newProfileSnap.exists()) {
-              setProfile(newProfileSnap.data() as UserProfile);
-            }
+            const newProfile: UserProfile = {
+              email: firebaseUser.email || "",
+              displayName: firebaseUser.displayName || "",
+              photoURL: firebaseUser.photoURL || "",
+              role: "learner",
+              createdAt: new Date().toISOString(),
+            };
+            await setDoc(profileRef, newProfile);
+            setProfile(newProfile);
           } catch (error) {
             console.error("Failed to create user profile:", error);
           }

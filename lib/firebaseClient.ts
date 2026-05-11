@@ -11,14 +11,9 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const isBrowser = typeof window !== "undefined";
 const isConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
-const app = isBrowser && isConfigured ? (!getApps().length ? initializeApp(firebaseConfig) : getApp()) : null;
+const app = isConfigured ? (!getApps().length ? initializeApp(firebaseConfig) : getApp()) : null;
 
 export const auth = app ? getAuth(app) : null;
 export const db = app ? getFirestore(app) : null;
 export const firebaseEnabled = Boolean(app);
-
-export function firebaseConfigPlaceholder() {
-  return firebaseConfig;
-}

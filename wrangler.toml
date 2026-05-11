@@ -1,4 +1,6 @@
 name = "tubertify"
 compatibility_date = "2026-05-05"
-compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
+pages_build_output_dir = "out"
+
+[vars]
+# Set YOUTUBE_API_KEY, GEMINI_API_KEY_1, GEMINI_API_KEY_2 in Cloudflare Pages dashboard
